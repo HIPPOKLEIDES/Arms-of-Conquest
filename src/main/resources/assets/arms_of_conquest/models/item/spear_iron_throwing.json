@@ -1,0 +1,6 @@
+{
+    "parent": "item/trident_throwing2",
+    "textures": {
+        "layer0": "arms_of_conquest:item/spear_iron"
+    }
+}
