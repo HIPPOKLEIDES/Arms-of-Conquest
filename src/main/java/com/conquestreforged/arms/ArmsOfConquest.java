@@ -16,7 +16,6 @@ public class ArmsOfConquest {
     }
 
     private void onSetup(FMLCommonSetupEvent ev) {
-        Log.info("Setting up Spartan Weaponry!");
         DeferredWorkQueue.runLater(() -> {
             NetworkHandler.init();
         });
