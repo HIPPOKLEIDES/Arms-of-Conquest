@@ -34,24 +34,24 @@ public class PacketOverextendedReachAttack {
             if (packet != null) {
                 ((NetworkEvent.Context)ctx.get()).enqueueWork(() -> {
                     ServerPlayerEntity player = ((NetworkEvent.Context)ctx.get()).getSender();
-                    Entity target = player.world.getEntityByID(packet.entityID);
+                    Entity target = player.level.getEntity(packet.entityID);
                     if (player != null && target != null) {
                         Log.info("Victim of attack: " + target.toString());
-                        ItemStack weapon = player.getHeldItemMainhand();
+                        ItemStack weapon = player.getMainHandItem();
                         if (weapon.getItem() instanceof ModSpear) {
                              { {
                                     //temp value
                                     float reach = 7.0F;
-                                    double distanceSquared = player.getDistanceSq(target);
+                                    double distanceSquared = player.distanceToSqr(target);
                                     double reachSquared = (double)(reach * reach);
                                     if (reachSquared >= distanceSquared) {
-                                        player.attackTargetEntityWithCurrentItem(target);
+                                        player.attack(target);
                                         Log.info("Attacking victim!");
                                     }
                                 }
 
-                                player.swingArm(Hand.MAIN_HAND);
-                                player.resetCooldown();
+                                player.swing(Hand.MAIN_HAND);
+                                player.resetAttackStrengthTicker();
                             }
 
                         }

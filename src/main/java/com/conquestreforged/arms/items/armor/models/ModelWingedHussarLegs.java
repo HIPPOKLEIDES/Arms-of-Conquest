@@ -21,55 +21,52 @@ public class ModelWingedHussarLegs<T extends LivingEntity> extends BipedModel<T>
 
     public ModelWingedHussarLegs() {
         super(0, 0, 128, 128);
-        textureWidth = 128;
-        textureHeight = 128;
+        texWidth = 128;
+        texHeight = 128;
 
         Chestplate = new ModelRenderer(this);
-        Chestplate.setRotationPoint(0.0F, 24.0F, 0.0F);
-        Chestplate.setTextureOffset(64, 64).addBox(-4.0F, -24.0F, -2.0F, 8.0F, 12.0F, 4.0F, 0.261F, false);
+        Chestplate.setPos(0.0F, 24.0F, 0.0F);
+        Chestplate.texOffs(64, 64).addBox(-4.0F, -24.0F, -2.0F, 8.0F, 12.0F, 4.0F, 0.261F, false);
 
         rightarm = new ModelRenderer(this);
-        rightarm.setRotationPoint(0.0F, 24.0F, 0.0F);
-        rightarm.setTextureOffset(96, 64).addBox(-3.0F, -26.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.252F, false);
+        rightarm.setPos(0.0F, 24.0F, 0.0F);
+        rightarm.texOffs(96, 64).addBox(-3.0F, -26.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.252F, false);
 
         leftarm = new ModelRenderer(this);
-        leftarm.setRotationPoint(0.0F, 24.0F, 0.0F);
-        leftarm.setTextureOffset(96, 80).addBox(-1.0F, -26.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.252F, false);
+        leftarm.setPos(0.0F, 24.0F, 0.0F);
+        leftarm.texOffs(96, 80).addBox(-1.0F, -26.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.252F, false);
 
         rightleg = new ModelRenderer(this);
-        rightleg.setRotationPoint(0.0F, 24.0F, 0.0F);
-        rightleg.setTextureOffset(80, 80).addBox(-1.98F, -24.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.252F, false);
+        rightleg.setPos(0.0F, 24.0F, 0.0F);
+        rightleg.texOffs(80, 80).addBox(-1.98F, -24.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.252F, false);
 
         leftleg = new ModelRenderer(this);
-        leftleg.setRotationPoint(0.0F, 24.0F, 0.0F);
-        leftleg.setTextureOffset(64, 80).addBox(-2.02F, -24.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.253F, false);
+        leftleg.setPos(0.0F, 24.0F, 0.0F);
+        leftleg.texOffs(64, 80).addBox(-2.02F, -24.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.253F, false);
 
-        this.bipedRightArm.addChild(rightarm);
-        this.bipedLeftArm.addChild(leftarm);
-        this.bipedRightLeg.addChild(rightleg);
-        this.bipedLeftLeg.addChild(leftleg);
+        this.rightArm.addChild(rightarm);
+        this.leftArm.addChild(leftarm);
+        this.rightLeg.addChild(rightleg);
+        this.leftLeg.addChild(leftleg);
 
-        this.bipedBody.addChild(Chestplate);
+        this.body.addChild(Chestplate);
 
     }
 
     @Override
-    public void render(MatrixStack p_225598_1_, IVertexBuilder p_225598_2_, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
-        this.bipedLeftArm.showModel = true;
-        this.bipedRightArm.showModel = true;
-        this.bipedBody.showModel = true;
-        this.bipedRightLeg.showModel = true;
-        this.bipedLeftLeg.showModel = true;
-        super.render(p_225598_1_, p_225598_2_, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+    public void renderToBuffer(MatrixStack p_225598_1_, IVertexBuilder p_225598_2_, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+        this.leftArm.visible = true;
+        this.rightArm.visible = true;
+        this.body.visible = true;
+        this.rightLeg.visible = true;
+        this.leftLeg.visible = true;
+        super.renderToBuffer(p_225598_1_, p_225598_2_, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
 
     }
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
+        modelRenderer.xRot = x;
+        modelRenderer.yRot = y;
+        modelRenderer.zRot = z;
     }
 }

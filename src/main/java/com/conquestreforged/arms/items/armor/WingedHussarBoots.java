@@ -20,13 +20,13 @@ public class WingedHussarBoots extends ArmorModelItem {
 
     @Override
     protected <A extends BipedModel<?>> A displays(A armorModel, EquipmentSlotType slot) {
-        armorModel.bipedHead.showModel = false;
-        armorModel.bipedHeadwear.showModel = false;
-        armorModel.bipedBody.showModel = false;
-        armorModel.bipedRightArm.showModel = false;
-        armorModel.bipedLeftArm.showModel = false;
-        armorModel.bipedRightLeg.showModel = false;
-        armorModel.bipedLeftLeg.showModel = false;
+        armorModel.head.visible = false;
+        armorModel.hat.visible = false;
+        armorModel.body.visible = false;
+        armorModel.rightArm.visible = false;
+        armorModel.leftArm.visible = false;
+        armorModel.rightLeg.visible = false;
+        armorModel.leftLeg.visible = false;
         return armorModel;
     }
 }

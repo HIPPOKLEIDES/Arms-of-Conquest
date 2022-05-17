@@ -20,6 +20,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,25 +37,25 @@ public class ClientEvents {
     public static void onMouseOver(RenderGameOverlayEvent.Post overlayEvent) {
         Minecraft minecraft = Minecraft.getInstance();
         PlayerEntity playerEntity = minecraft.player;
-        ItemStack weapon = playerEntity.getHeldItemMainhand();
+        ItemStack weapon = playerEntity.getMainHandItem();
         if (weapon.getItem() instanceof ModSpear && getEntityMouseOverExtension(7.0F) instanceof EntityRayTraceResult) {
 
-            if (minecraft.playerController.getCurrentGameType() != GameType.SPECTATOR || isTargetNamedMenuProvider(minecraft.objectMouseOver)) {
-                int scaledHeight = minecraft.getMainWindow().getScaledHeight();
-                int scaledWidth = minecraft.getMainWindow().getScaledWidth();
+            if (minecraft.gameMode.getPlayerMode() != GameType.SPECTATOR || isTargetNamedMenuProvider(minecraft.hitResult)) {
+                int scaledHeight = minecraft.getWindow().getGuiScaledHeight();
+                int scaledWidth = minecraft.getWindow().getGuiScaledWidth();
 
-                if (minecraft.gameSettings.attackIndicator == AttackIndicatorStatus.CROSSHAIR) {
-                    float f = minecraft.player.getCooledAttackStrength(0.0F);
+                if (minecraft.options.attackIndicator == AttackIndicatorStatus.CROSSHAIR) {
+                    float f = minecraft.player.getAttackStrengthScale(0.0F);
                     boolean flag = false;
-                    if (minecraft.getRenderViewEntity() != null && minecraft.getRenderViewEntity() instanceof LivingEntity && f >= 1.0F) {
-                        flag = minecraft.player.getCooldownPeriod() > 5.0F;
-                        flag = flag & minecraft.getRenderViewEntity().isAlive();
+                    if (minecraft.getCameraEntity() != null && minecraft.getCameraEntity() instanceof LivingEntity && f >= 1.0F) {
+                        flag = minecraft.player.getCurrentItemAttackStrengthDelay() > 5.0F;
+                        flag = flag & minecraft.getCameraEntity().isAlive();
                     }
                     int j = scaledHeight / 2 - 7 + 16;
                     int k = scaledWidth / 2 - 8;
                     if (flag) {
-                        minecraft.getTextureManager().bindTexture((AbstractGui.GUI_ICONS_LOCATION));
-                        minecraft.ingameGUI.blit(k, j, 68, 94, 16, 16);
+                        minecraft.getTextureManager().bind((AbstractGui.GUI_ICONS_LOCATION));
+                        minecraft.gui.blit(overlayEvent.getMatrixStack(), k, j, 68, 94, 16, 16);
                     }
                 }
 
@@ -69,9 +70,9 @@ public class ClientEvents {
         } else if (rayTraceIn.getType() == RayTraceResult.Type.ENTITY) {
             return ((EntityRayTraceResult)rayTraceIn).getEntity() instanceof INamedContainerProvider;
         } else if (rayTraceIn.getType() == RayTraceResult.Type.BLOCK) {
-            BlockPos blockpos = ((BlockRayTraceResult)rayTraceIn).getPos();
-            World world = minecraft.world;
-            return world.getBlockState(blockpos).getContainer(world, blockpos) != null;
+            BlockPos blockpos = ((BlockRayTraceResult)rayTraceIn).getBlockPos();
+            World world = minecraft.level;
+            return world.getBlockState(blockpos).getMenuProvider(world, blockpos) != null;
         } else {
             return false;
         }
@@ -79,16 +80,16 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onMouseInputEvent(InputEvent.MouseInputEvent mouseInputEvent) {
-        KeyBinding attackKey = Minecraft.getInstance().gameSettings.keyBindAttack;
-        if (mouseInputEvent.getButton() == attackKey.getKey().getKeyCode() && mouseInputEvent.getAction() == 1) {
+        KeyBinding attackKey = Minecraft.getInstance().options.keyAttack;
+        if (mouseInputEvent.getButton() == attackKey.getKey().getValue() && mouseInputEvent.getAction() == 1) {
             checkWeaponReach();
         }
     }
 
     @SubscribeEvent
     public static void onKeyInputEvent(InputEvent.KeyInputEvent keyInputEvent) {
-        KeyBinding attackKey = Minecraft.getInstance().gameSettings.keyBindAttack;
-        if (keyInputEvent.getKey() == attackKey.getKey().getKeyCode() && keyInputEvent.getAction() == 1) {
+        KeyBinding attackKey = Minecraft.getInstance().options.keyAttack;
+        if (keyInputEvent.getKey() == attackKey.getKey().getValue() && keyInputEvent.getAction() == 1) {
             checkWeaponReach();
         }
     }
@@ -96,17 +97,24 @@ public class ClientEvents {
     private static void checkWeaponReach() {
         Minecraft minecraft = Minecraft.getInstance();
         PlayerEntity player = minecraft.player;
-        if (minecraft.world != null && minecraft.currentScreen == null && !minecraft.isGamePaused() && player != null) {
-            ItemStack weapon = player.getHeldItemMainhand();
+        if (minecraft.level != null && minecraft.screen == null && !minecraft.isPaused() && player != null) {
+            ItemStack weapon = player.getMainHandItem();
             if (weapon.getItem() instanceof ModSpear) {
-                Log.info("Attempting Reach Attack!");
+                //Log.info("Attempting Reach Attack!");
                 float reach = 7.0F;
                 RayTraceResult rayTraceResult = getEntityMouseOverExtension(reach);
                 if (rayTraceResult instanceof EntityRayTraceResult) {
                     Entity entityHit = ((EntityRayTraceResult)rayTraceResult).getEntity();
-                    if (entityHit != null && entityHit.hurtResistantTime == 0 && entityHit != player && entityHit != player.getRidingEntity()) {
-                        NetworkHandler.sendPacketToServer(new PacketOverextendedReachAttack(entityHit.getEntityId()));
-                        Log.info("Overextended Reach Packet sent");
+                    if (entityHit != null && entityHit.invulnerableTime == 0 && entityHit != player && entityHit != player.getVehicle()) {
+                        float velocity = 0.0F;
+                        if (player.getVehicle() != null) {
+                            Entity riding = player.getVehicle();
+                            Vector3d vec = riding.getDeltaMovement();
+                            velocity = (float)vec.length();
+                        }
+
+                        NetworkHandler.sendPacketToServer(new PacketOverextendedReachAttack(entityHit.getId()));
+                        //Log.info("Overextended Reach Packet sent");
                     }
                 }
             }
@@ -116,42 +124,48 @@ public class ClientEvents {
     private static RayTraceResult getEntityMouseOverExtension (float reach) {
         RayTraceResult result = null;
         Minecraft minecraft = Minecraft.getInstance();
-        Entity viewedEntity = minecraft.getRenderViewEntity();
+        Entity viewedEntity = minecraft.getCameraEntity();
         //Log.info("getEntityMouseOverExtension check1");
         //Log.info(viewedEntity.toString());
         if (viewedEntity != null) {
             double d0 = reach;
             RayTraceResult rayTraceResult = viewedEntity.pick(d0, 0.0F, false);
-            Vec3d eyePos = viewedEntity.getEyePosition(0.0F);
+            Vector3d eyePos = viewedEntity.getEyePosition(0.0F);
             boolean flag = false;
             double d1 = d0;
-            if(minecraft.playerController.extendedReach() && d0 < 6.0D) {
+            if(minecraft.gameMode.hasFarPickRange() && d0 < 6.0D) {
                 d1 = 6.0D;
                 d0 = d1;
             } else if (d0 > (double)reach) {
                 flag = true;
             }
 
+            d1 *= d1;
             if (rayTraceResult != null) {
-                d1 = rayTraceResult.getHitVec().squareDistanceTo(eyePos);
+                d1 = rayTraceResult.getLocation().distanceToSqr(eyePos);
             }
 
-            Vec3d lookVec = viewedEntity.getLook(1.0F);
-            Vec3d attackVec = eyePos.add(lookVec.x * d0, lookVec.y * d0, lookVec.z * d0);
-            AxisAlignedBB expBounds = viewedEntity.getBoundingBox().expand(lookVec.scale(d0)).grow(1.0D, 1.0D, 1.0D);
-            EntityRayTraceResult entityRayTraceResult = ProjectileHelper.rayTraceEntities(viewedEntity, eyePos, attackVec, expBounds, (entity) -> !entity.isSpectator() && entity.canBeCollidedWith(), d1 );
+            Vector3d lookVec = viewedEntity.getViewVector(1.0F);
+            Vector3d attackVec = eyePos.add(lookVec.x * d0, lookVec.y * d0, lookVec.z * d0);
+            AxisAlignedBB expBounds = viewedEntity.getBoundingBox().expandTowards(lookVec.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
+            EntityRayTraceResult entityRayTraceResult = ProjectileHelper.getEntityHitResult(viewedEntity, eyePos, attackVec, expBounds, (entity) -> {
+                return Boolean.TRUE;
+            }, d1 );
 
             //Log.info("getEntityMouseOverExtension check2");
             if (entityRayTraceResult != null) {
-                Vec3d hitVec = entityRayTraceResult.getHitVec();
-                double d2 = eyePos.squareDistanceTo(hitVec);
+                Vector3d hitVec = entityRayTraceResult.getLocation();
+                double d2 = eyePos.distanceToSqr(hitVec);
                 if (flag && d2 > (double)(reach * reach)) {
-                    result = BlockRayTraceResult.createMiss(hitVec, Direction.getFacingFromVector(lookVec.x, lookVec.y, lookVec.z), new BlockPos(hitVec));
+                    //Log.info("getEntityMouseOverExtension miss1");
+                    result = BlockRayTraceResult.miss(hitVec, Direction.getNearest(lookVec.x, lookVec.y, lookVec.z), new BlockPos(hitVec));
                 } else if (d2 < d1 || result == null) {
+                    //Log.info("getEntityMouseOverExtension success");
                     result = entityRayTraceResult;
                 }
             } else {
-                result = BlockRayTraceResult.createMiss(attackVec, Direction.getFacingFromVector(lookVec.x, lookVec.y, lookVec.z), new BlockPos(attackVec));
+                //Log.info("getEntityMouseOverExtension miss2");
+                result = BlockRayTraceResult.miss(attackVec, Direction.getNearest(lookVec.x, lookVec.y, lookVec.z), new BlockPos(attackVec));
             }
         }
         return (RayTraceResult)result;

@@ -23,9 +23,9 @@ public abstract class ArmorModelItem extends ArmorItem {
                 A armorModel = this.getBaseModelInstance();
                 armorModel = displays(armorModel, armorSlot);
 
-                armorModel.isSneak = defaultModel.isSneak;
-                armorModel.isSitting = defaultModel.isSitting;
-                armorModel.isChild = defaultModel.isChild;
+                armorModel.crouching = defaultModel.crouching;
+                armorModel.riding = defaultModel.riding;
+                armorModel.young = defaultModel.young;
                 armorModel.rightArmPose = defaultModel.rightArmPose;
                 armorModel.leftArmPose = defaultModel.leftArmPose;
 

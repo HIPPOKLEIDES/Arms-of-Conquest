@@ -14,7 +14,7 @@ public class EntityTypes {
 
     public static final EntityType<SpearEntity> SPEAR_IRON = build(
             (MOD_ID + ":" + "spear_iron"),
-            EntityType.Builder.<SpearEntity>create(SpearEntity::new, EntityClassification.MISC).size(1.0F, 1.0F).setTrackingRange(256)
+            EntityType.Builder.<SpearEntity>of(SpearEntity::new, EntityClassification.MISC).sized(1.0F, 1.0F).setTrackingRange(256)
     );
 
     private static <T extends Entity> EntityType<T> build(String name, EntityType.Builder<T> builder) {

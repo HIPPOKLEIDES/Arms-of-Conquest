@@ -21,13 +21,13 @@ public class StraightCrestHelmet extends ArmorModelItem {
 
     @Override
     protected <A extends BipedModel<?>> A displays(A armorModel, EquipmentSlotType slot) {
-        armorModel.bipedHead.showModel = true;
-        armorModel.bipedHeadwear.showModel = true;
-        armorModel.bipedBody.showModel = false;
-        armorModel.bipedRightArm.showModel = false;
-        armorModel.bipedLeftArm.showModel = false;
-        armorModel.bipedRightLeg.showModel = false;
-        armorModel.bipedLeftLeg.showModel = false;
+        armorModel.head.visible = true;
+        armorModel.hat.visible = true;
+        armorModel.body.visible = false;
+        armorModel.rightArm.visible = false;
+        armorModel.leftArm.visible = false;
+        armorModel.rightLeg.visible = false;
+        armorModel.leftLeg.visible = false;
         return armorModel;
     }
 }

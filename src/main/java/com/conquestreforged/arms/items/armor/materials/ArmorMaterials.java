@@ -53,7 +53,7 @@ public enum ArmorMaterials implements IArmorMaterial {
     private int durability, enchantability;
     private final int[] damageReductionAmountArray;
     private float toughness;
-    private ArmorMaterials(String name, int durability, int[] damageReductionAmountArray, int enchantability, String equipSound, float toughness) {
+    ArmorMaterials(String name, int durability, int[] damageReductionAmountArray, int enchantability, String equipSound, float toughness) {
         this.name = name;
         this.durability = durability;
         this.damageReductionAmountArray = damageReductionAmountArray;
@@ -62,28 +62,28 @@ public enum ArmorMaterials implements IArmorMaterial {
         this.toughness = toughness;
     }
     @Override
-    public int getDurability(EquipmentSlotType equipmentSlotType) {
+    public int getDurabilityForSlot(EquipmentSlotType equipmentSlotType) {
         return this.durability;
     }
 
     @Override
-    public int getDamageReductionAmount(EquipmentSlotType equipmentSlotType) {
+    public int getDefenseForSlot(EquipmentSlotType equipmentSlotType) {
         return this.damageReductionAmountArray[equipmentSlotType.getIndex()];
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return this.enchantability;
     }
 
     @Override
-    public SoundEvent getSoundEvent() {
-        return SoundEvents.ITEM_ARMOR_EQUIP_GENERIC;
+    public SoundEvent getEquipSound() {
+        return SoundEvents.ARMOR_EQUIP_GENERIC;
     }
 
     @Override
-    public Ingredient getRepairMaterial() {
-        return Ingredient.fromItems(Items.IRON_INGOT);
+    public Ingredient getRepairIngredient() {
+        return Ingredient.of(Items.IRON_INGOT);
     }
 
     @Override
@@ -94,5 +94,10 @@ public enum ArmorMaterials implements IArmorMaterial {
     @Override
     public float getToughness() {
         return this.toughness;
+    }
+
+    @Override
+    public float getKnockbackResistance() {
+        return 0;
     }
 }
