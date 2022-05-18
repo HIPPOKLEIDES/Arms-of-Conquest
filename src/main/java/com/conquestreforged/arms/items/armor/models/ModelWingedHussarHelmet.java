@@ -1,13 +1,13 @@
 package com.conquestreforged.arms.items.armor.models;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.LivingEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.LivingEntity;
 
-public class ModelWingedHussarHelmet<T extends LivingEntity> extends BipedModel<T> {
-    private final ModelRenderer helmet;
+public class ModelWingedHussarHelmet<T extends LivingEntity> extends HumanoidModel<T> {
+    private final ModelPart helmet;
 
     public static final ModelWingedHussarHelmet<LivingEntity> INSTANCE = new ModelWingedHussarHelmet<LivingEntity>();
 
@@ -16,7 +16,7 @@ public class ModelWingedHussarHelmet<T extends LivingEntity> extends BipedModel<
         texWidth = 128;
         texHeight = 128;
 
-        helmet = new ModelRenderer(this);
+        helmet = new ModelPart(this);
         helmet.setPos(0.0F, 24.5F, 0.0F);
         helmet.texOffs(0, 32).addBox(-4.0F, -32.5F, -4.0F, 8.0F, 8.0F, 8.0F, 0.55F, false);
         helmet.texOffs(0, 48).addBox(-3.5F, -33.65F, -3.5F, 7.0F, 7.0F, 7.0F, 0.5F, false);
@@ -29,7 +29,7 @@ public class ModelWingedHussarHelmet<T extends LivingEntity> extends BipedModel<
     }
 
     @Override
-    public void renderToBuffer(MatrixStack p_225598_1_, IVertexBuilder p_225598_2_, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+    public void renderToBuffer(PoseStack p_225598_1_, VertexConsumer p_225598_2_, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
         this.head.visible = true;
         super.renderToBuffer(p_225598_1_, p_225598_2_, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
     }

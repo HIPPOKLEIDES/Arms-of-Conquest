@@ -3,28 +3,30 @@ package com.conquestreforged.arms.items.armor;
 import com.conquestreforged.arms.ArmsOfConquest;
 import com.conquestreforged.arms.items.armor.models.ModelWingedHussarChest;
 import com.conquestreforged.arms.items.armor.models.ModelWingedHussarLegs;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class WingedHussarPants extends ArmorModelItem {
 
 
-    public WingedHussarPants(IArmorMaterial material, EquipmentSlotType head, Properties props) {
+    public WingedHussarPants(ArmorMaterial material, EquipmentSlot head, Properties props) {
         super(material, head, props);
     }
 
     @Override
-    protected <A extends BipedModel<?>> A getBaseModelInstance() {
+    protected <A extends HumanoidModel<?>> A getBaseModelInstance() {
         return (A) ModelWingedHussarLegs.INSTANCE;
     }
 
     @Override
-    protected <A extends BipedModel<?>> A displays(A armorModel, EquipmentSlotType slot) {
+    protected <A extends HumanoidModel<?>> A displays(A armorModel, EquipmentSlot slot) {
         armorModel.head.visible = false;
         armorModel.hat.visible = false;
         armorModel.body.visible = false;
@@ -37,7 +39,7 @@ public class WingedHussarPants extends ArmorModelItem {
 
     @Nullable
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return ArmsOfConquest.MOD_ID + ":textures/models/armor/" + "winged_hussar" + "_layer_1.png";
     }
 }

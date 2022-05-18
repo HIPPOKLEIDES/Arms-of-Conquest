@@ -3,25 +3,32 @@ package com.conquestreforged.arms.items;
 import com.conquestreforged.arms.entities.SpearEntity;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.item.Item.Properties;
 
 public class ModSpear extends Item {
 
@@ -36,8 +43,8 @@ public class ModSpear extends Item {
     }
 
     @Override
-    public UseAction getUseAnimation(ItemStack p_77661_1_) {
-        return UseAction.SPEAR;
+    public UseAnim getUseAnimation(ItemStack p_77661_1_) {
+        return UseAnim.SPEAR;
     }
 
     @Override
@@ -46,9 +53,9 @@ public class ModSpear extends Item {
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
-        if (entityLiving instanceof PlayerEntity) {
-            PlayerEntity playerentity = (PlayerEntity) entityLiving;
+    public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
+        if (entityLiving instanceof Player) {
+            Player playerentity = (Player) entityLiving;
             int i = this.getUseDuration(stack) - timeLeft;
             if (i >= 10) {
                 int j = EnchantmentHelper.getRiptide(stack);
@@ -61,11 +68,11 @@ public class ModSpear extends Item {
                             SpearEntity tridententity = new SpearEntity(worldIn, playerentity, stack);
                             tridententity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, 2.5F + (float) j * 0.5F, 1.0F);
                             if (playerentity.abilities.instabuild) {
-                                tridententity.pickup = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
+                                tridententity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                             }
 
                             worldIn.addFreshEntity(tridententity);
-                            worldIn.playSound((PlayerEntity) null, tridententity, SoundEvents.TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            worldIn.playSound((Player) null, tridententity, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
                             if (!playerentity.abilities.instabuild) {
                                 playerentity.inventory.removeItem(stack);
                             }
@@ -76,10 +83,10 @@ public class ModSpear extends Item {
                     if (j > 0) {
                         float f7 = playerentity.yRot;
                         float f = playerentity.xRot;
-                        float f1 = -MathHelper.sin(f7 * ((float) Math.PI / 180F)) * MathHelper.cos(f * ((float) Math.PI / 180F));
-                        float f2 = -MathHelper.sin(f * ((float) Math.PI / 180F));
-                        float f3 = MathHelper.cos(f7 * ((float) Math.PI / 180F)) * MathHelper.cos(f * ((float) Math.PI / 180F));
-                        float f4 = MathHelper.sqrt(f1 * f1 + f2 * f2 + f3 * f3);
+                        float f1 = -Mth.sin(f7 * ((float) Math.PI / 180F)) * Mth.cos(f * ((float) Math.PI / 180F));
+                        float f2 = -Mth.sin(f * ((float) Math.PI / 180F));
+                        float f3 = Mth.cos(f7 * ((float) Math.PI / 180F)) * Mth.cos(f * ((float) Math.PI / 180F));
+                        float f4 = Mth.sqrt(f1 * f1 + f2 * f2 + f3 * f3);
                         float f5 = 3.0F * ((1.0F + (float) j) / 4.0F);
                         f1 = f1 * (f5 / f4);
                         f2 = f2 * (f5 / f4);
@@ -88,7 +95,7 @@ public class ModSpear extends Item {
                         playerentity.startAutoSpinAttack(20);
                         if (playerentity.isOnGround()) {
                             float f6 = 1.1999999F;
-                            playerentity.move(MoverType.SELF, new Vector3d(0.0D, (double) 1.1999999F, 0.0D));
+                            playerentity.move(MoverType.SELF, new Vec3(0.0D, (double) 1.1999999F, 0.0D));
                         }
 
                         SoundEvent soundevent;
@@ -100,7 +107,7 @@ public class ModSpear extends Item {
                             soundevent = SoundEvents.TRIDENT_RIPTIDE_1;
                         }
 
-                        worldIn.playSound((PlayerEntity) null, playerentity, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        worldIn.playSound((Player) null, playerentity, soundevent, SoundSource.PLAYERS, 1.0F, 1.0F);
                     }
 
                 }
@@ -109,31 +116,31 @@ public class ModSpear extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
         ItemStack itemInHand = playerEntity.getItemInHand(hand);
         if (itemInHand.getDamageValue() >= itemInHand.getMaxDamage()) {
-            return ActionResult.fail(itemInHand);
+            return InteractionResultHolder.fail(itemInHand);
         } else if (EnchantmentHelper.getRiptide(itemInHand) > 0 && !playerEntity.isInWaterOrRain()) {
-            return ActionResult.fail(itemInHand);
+            return InteractionResultHolder.fail(itemInHand);
         } else {
             playerEntity.startUsingItem(hand);
-            return ActionResult.consume(itemInHand);
+            return InteractionResultHolder.consume(itemInHand);
         }
     }
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         stack.hurtAndBreak(1, attacker, (p_220048_0_) -> {
-            p_220048_0_.broadcastBreakEvent(EquipmentSlotType.MAINHAND);
+            p_220048_0_.broadcastBreakEvent(EquipmentSlot.MAINHAND);
         });
         return true;
     }
 
     @Override
-    public boolean mineBlock(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+    public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         if ((double) state.getDestroySpeed(worldIn, pos) != 0.0D) {
             stack.hurtAndBreak(2, entityLiving, (p_220046_0_) -> {
-                p_220046_0_.broadcastBreakEvent(EquipmentSlotType.MAINHAND);
+                p_220046_0_.broadcastBreakEvent(EquipmentSlot.MAINHAND);
             });
         }
 
@@ -141,7 +148,7 @@ public class ModSpear extends Item {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType equipmentSlot) {
-        return equipmentSlot == EquipmentSlotType.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(equipmentSlot);
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
+        return equipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(equipmentSlot);
     }
 }

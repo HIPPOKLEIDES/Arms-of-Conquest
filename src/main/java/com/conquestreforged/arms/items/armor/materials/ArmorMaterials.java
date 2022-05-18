@@ -1,14 +1,14 @@
 package com.conquestreforged.arms.items.armor.materials;
 
 import com.conquestreforged.arms.ArmsOfConquest;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 
-public enum ArmorMaterials implements IArmorMaterial {
+public enum ArmorMaterials implements ArmorMaterial {
 
     centurion_helmet("centurion_helmet", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
     corinthian_helmet("corinthian_helmet", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
@@ -62,12 +62,12 @@ public enum ArmorMaterials implements IArmorMaterial {
         this.toughness = toughness;
     }
     @Override
-    public int getDurabilityForSlot(EquipmentSlotType equipmentSlotType) {
+    public int getDurabilityForSlot(EquipmentSlot equipmentSlotType) {
         return this.durability;
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlotType equipmentSlotType) {
+    public int getDefenseForSlot(EquipmentSlot equipmentSlotType) {
         return this.damageReductionAmountArray[equipmentSlotType.getIndex()];
     }
 

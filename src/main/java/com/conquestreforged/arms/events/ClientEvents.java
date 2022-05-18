@@ -7,22 +7,22 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.settings.AttackIndicatorStatus;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.client.AttackIndicatorStatus;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.GameType;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -30,15 +30,21 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jline.utils.Log;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEvents {
 
     @SubscribeEvent
     public static void onMouseOver(RenderGameOverlayEvent.Post overlayEvent) {
         Minecraft minecraft = Minecraft.getInstance();
-        PlayerEntity playerEntity = minecraft.player;
+        Player playerEntity = minecraft.player;
         ItemStack weapon = playerEntity.getMainHandItem();
-        if (weapon.getItem() instanceof ModSpear && getEntityMouseOverExtension(7.0F) instanceof EntityRayTraceResult) {
+        if (weapon.getItem() instanceof ModSpear && getEntityMouseOverExtension(7.0F) instanceof EntityHitResult) {
 
             if (minecraft.gameMode.getPlayerMode() != GameType.SPECTATOR || isTargetNamedMenuProvider(minecraft.hitResult)) {
                 int scaledHeight = minecraft.getWindow().getGuiScaledHeight();
@@ -54,7 +60,7 @@ public class ClientEvents {
                     int j = scaledHeight / 2 - 7 + 16;
                     int k = scaledWidth / 2 - 8;
                     if (flag) {
-                        minecraft.getTextureManager().bind((AbstractGui.GUI_ICONS_LOCATION));
+                        minecraft.getTextureManager().bind((GuiComponent.GUI_ICONS_LOCATION));
                         minecraft.gui.blit(overlayEvent.getMatrixStack(), k, j, 68, 94, 16, 16);
                     }
                 }
@@ -63,15 +69,15 @@ public class ClientEvents {
         }
     }
 
-    private static boolean isTargetNamedMenuProvider(RayTraceResult rayTraceIn) {
+    private static boolean isTargetNamedMenuProvider(HitResult rayTraceIn) {
         Minecraft minecraft = Minecraft.getInstance();
         if (rayTraceIn == null) {
             return false;
-        } else if (rayTraceIn.getType() == RayTraceResult.Type.ENTITY) {
-            return ((EntityRayTraceResult)rayTraceIn).getEntity() instanceof INamedContainerProvider;
-        } else if (rayTraceIn.getType() == RayTraceResult.Type.BLOCK) {
-            BlockPos blockpos = ((BlockRayTraceResult)rayTraceIn).getBlockPos();
-            World world = minecraft.level;
+        } else if (rayTraceIn.getType() == HitResult.Type.ENTITY) {
+            return ((EntityHitResult)rayTraceIn).getEntity() instanceof MenuProvider;
+        } else if (rayTraceIn.getType() == HitResult.Type.BLOCK) {
+            BlockPos blockpos = ((BlockHitResult)rayTraceIn).getBlockPos();
+            Level world = minecraft.level;
             return world.getBlockState(blockpos).getMenuProvider(world, blockpos) != null;
         } else {
             return false;
@@ -80,7 +86,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onMouseInputEvent(InputEvent.MouseInputEvent mouseInputEvent) {
-        KeyBinding attackKey = Minecraft.getInstance().options.keyAttack;
+        KeyMapping attackKey = Minecraft.getInstance().options.keyAttack;
         if (mouseInputEvent.getButton() == attackKey.getKey().getValue() && mouseInputEvent.getAction() == 1) {
             checkWeaponReach();
         }
@@ -88,7 +94,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onKeyInputEvent(InputEvent.KeyInputEvent keyInputEvent) {
-        KeyBinding attackKey = Minecraft.getInstance().options.keyAttack;
+        KeyMapping attackKey = Minecraft.getInstance().options.keyAttack;
         if (keyInputEvent.getKey() == attackKey.getKey().getValue() && keyInputEvent.getAction() == 1) {
             checkWeaponReach();
         }
@@ -96,20 +102,20 @@ public class ClientEvents {
 
     private static void checkWeaponReach() {
         Minecraft minecraft = Minecraft.getInstance();
-        PlayerEntity player = minecraft.player;
+        Player player = minecraft.player;
         if (minecraft.level != null && minecraft.screen == null && !minecraft.isPaused() && player != null) {
             ItemStack weapon = player.getMainHandItem();
             if (weapon.getItem() instanceof ModSpear) {
                 //Log.info("Attempting Reach Attack!");
                 float reach = 7.0F;
-                RayTraceResult rayTraceResult = getEntityMouseOverExtension(reach);
-                if (rayTraceResult instanceof EntityRayTraceResult) {
-                    Entity entityHit = ((EntityRayTraceResult)rayTraceResult).getEntity();
+                HitResult rayTraceResult = getEntityMouseOverExtension(reach);
+                if (rayTraceResult instanceof EntityHitResult) {
+                    Entity entityHit = ((EntityHitResult)rayTraceResult).getEntity();
                     if (entityHit != null && entityHit.invulnerableTime == 0 && entityHit != player && entityHit != player.getVehicle()) {
                         float velocity = 0.0F;
                         if (player.getVehicle() != null) {
                             Entity riding = player.getVehicle();
-                            Vector3d vec = riding.getDeltaMovement();
+                            Vec3 vec = riding.getDeltaMovement();
                             velocity = (float)vec.length();
                         }
 
@@ -121,16 +127,16 @@ public class ClientEvents {
         }
     }
 
-    private static RayTraceResult getEntityMouseOverExtension (float reach) {
-        RayTraceResult result = null;
+    private static HitResult getEntityMouseOverExtension (float reach) {
+        HitResult result = null;
         Minecraft minecraft = Minecraft.getInstance();
         Entity viewedEntity = minecraft.getCameraEntity();
         //Log.info("getEntityMouseOverExtension check1");
         //Log.info(viewedEntity.toString());
         if (viewedEntity != null) {
             double d0 = reach;
-            RayTraceResult rayTraceResult = viewedEntity.pick(d0, 0.0F, false);
-            Vector3d eyePos = viewedEntity.getEyePosition(0.0F);
+            HitResult rayTraceResult = viewedEntity.pick(d0, 0.0F, false);
+            Vec3 eyePos = viewedEntity.getEyePosition(0.0F);
             boolean flag = false;
             double d1 = d0;
             if(minecraft.gameMode.hasFarPickRange() && d0 < 6.0D) {
@@ -145,30 +151,30 @@ public class ClientEvents {
                 d1 = rayTraceResult.getLocation().distanceToSqr(eyePos);
             }
 
-            Vector3d lookVec = viewedEntity.getViewVector(1.0F);
-            Vector3d attackVec = eyePos.add(lookVec.x * d0, lookVec.y * d0, lookVec.z * d0);
-            AxisAlignedBB expBounds = viewedEntity.getBoundingBox().expandTowards(lookVec.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
-            EntityRayTraceResult entityRayTraceResult = ProjectileHelper.getEntityHitResult(viewedEntity, eyePos, attackVec, expBounds, (entity) -> {
+            Vec3 lookVec = viewedEntity.getViewVector(1.0F);
+            Vec3 attackVec = eyePos.add(lookVec.x * d0, lookVec.y * d0, lookVec.z * d0);
+            AABB expBounds = viewedEntity.getBoundingBox().expandTowards(lookVec.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
+            EntityHitResult entityRayTraceResult = ProjectileUtil.getEntityHitResult(viewedEntity, eyePos, attackVec, expBounds, (entity) -> {
                 return Boolean.TRUE;
             }, d1 );
 
             //Log.info("getEntityMouseOverExtension check2");
             if (entityRayTraceResult != null) {
-                Vector3d hitVec = entityRayTraceResult.getLocation();
+                Vec3 hitVec = entityRayTraceResult.getLocation();
                 double d2 = eyePos.distanceToSqr(hitVec);
                 if (flag && d2 > (double)(reach * reach)) {
                     //Log.info("getEntityMouseOverExtension miss1");
-                    result = BlockRayTraceResult.miss(hitVec, Direction.getNearest(lookVec.x, lookVec.y, lookVec.z), new BlockPos(hitVec));
+                    result = BlockHitResult.miss(hitVec, Direction.getNearest(lookVec.x, lookVec.y, lookVec.z), new BlockPos(hitVec));
                 } else if (d2 < d1 || result == null) {
                     //Log.info("getEntityMouseOverExtension success");
                     result = entityRayTraceResult;
                 }
             } else {
                 //Log.info("getEntityMouseOverExtension miss2");
-                result = BlockRayTraceResult.miss(attackVec, Direction.getNearest(lookVec.x, lookVec.y, lookVec.z), new BlockPos(attackVec));
+                result = BlockHitResult.miss(attackVec, Direction.getNearest(lookVec.x, lookVec.y, lookVec.z), new BlockPos(attackVec));
             }
         }
-        return (RayTraceResult)result;
+        return (HitResult)result;
     }
 
 }

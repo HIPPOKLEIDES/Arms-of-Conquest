@@ -1,41 +1,41 @@
 package com.conquestreforged.arms.entities;
 
 import com.conquestreforged.arms.init.ItemInit;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class SpearEntity extends AbstractArrowEntity {
+public class SpearEntity extends AbstractArrow {
 
     private ItemStack thrownStack;
     private boolean dealtDamage;
     public int clientSideReturnTridentTickCount;
 
 
-    public SpearEntity(EntityType<? extends SpearEntity> entityType, World world) {
+    public SpearEntity(EntityType<? extends SpearEntity> entityType, Level world) {
         super(entityType, world);
         this.thrownStack = new ItemStack(ItemInit.spear_iron);
     }
 
-    public SpearEntity(World world, LivingEntity livingEntity, ItemStack itemStack) {
+    public SpearEntity(Level world, LivingEntity livingEntity, ItemStack itemStack) {
         super(EntityTypes.SPEAR_IRON, livingEntity, world);
         this.thrownStack = new ItemStack(ItemInit.spear_iron);
         this.thrownStack = itemStack.copy();
@@ -54,7 +54,7 @@ public class SpearEntity extends AbstractArrowEntity {
         Entity playerEntity = this.getOwner();
         if ((this.dealtDamage || this.isNoPhysics()) && playerEntity != null) {
             if (!this.isAcceptibleReturnOwner()) {
-                if (!this.level.isClientSide && this.pickup == AbstractArrowEntity.PickupStatus.ALLOWED) {
+                if (!this.level.isClientSide && this.pickup == AbstractArrow.Pickup.ALLOWED) {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
 
@@ -67,7 +67,7 @@ public class SpearEntity extends AbstractArrowEntity {
     private boolean isAcceptibleReturnOwner() {
         Entity playerEntity = this.getOwner();
         if (playerEntity != null && playerEntity.isAlive()) {
-            return !(playerEntity instanceof ServerPlayerEntity) || !playerEntity.isSpectator();
+            return !(playerEntity instanceof ServerPlayer) || !playerEntity.isSpectator();
         } else {
             return false;
         }
@@ -79,12 +79,12 @@ public class SpearEntity extends AbstractArrowEntity {
     }
 
     @Override
-    protected EntityRayTraceResult findHitEntity(Vector3d startVec, Vector3d endVec) {
+    protected EntityHitResult findHitEntity(Vec3 startVec, Vec3 endVec) {
         return this.dealtDamage ? null : super.findHitEntity(startVec, endVec);
     }
 
     @Override
-    protected void onHitEntity(EntityRayTraceResult entityRayTraceResult) {
+    protected void onHitEntity(EntityHitResult entityRayTraceResult) {
         Entity entityHit = entityRayTraceResult.getEntity();
         float f = 8.0F;
         if (entityHit instanceof LivingEntity) {
@@ -112,12 +112,12 @@ public class SpearEntity extends AbstractArrowEntity {
 
         this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
         float f1 = 1.0F;
-        if (this.level instanceof ServerWorld && this.level.isThundering() && EnchantmentHelper.hasChanneling(this.thrownStack)) {
+        if (this.level instanceof ServerLevel && this.level.isThundering() && EnchantmentHelper.hasChanneling(this.thrownStack)) {
             BlockPos blockpos = entityHit.blockPosition();
             if (this.level.canSeeSky(blockpos)) {
-                LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(this.level);
-                lightningboltentity.moveTo(Vector3d.atBottomCenterOf(blockpos));
-                lightningboltentity.setCause(entityPlayer instanceof ServerPlayerEntity ? (ServerPlayerEntity)entityPlayer : null);
+                LightningBolt lightningboltentity = EntityType.LIGHTNING_BOLT.create(this.level);
+                lightningboltentity.moveTo(Vec3.atBottomCenterOf(blockpos));
+                lightningboltentity.setCause(entityPlayer instanceof ServerPlayer ? (ServerPlayer)entityPlayer : null);
                 this.level.addFreshEntity(lightningboltentity);
                 soundevent = SoundEvents.TRIDENT_THUNDER;
                 f1 = 5.0F;
@@ -133,7 +133,7 @@ public class SpearEntity extends AbstractArrowEntity {
     }
 
     @Override
-    public void playerTouch(PlayerEntity playerHit) {
+    public void playerTouch(Player playerHit) {
         Entity entityShooter = this.getOwner();
         if (entityShooter == null || entityShooter.getUUID() == playerHit.getUUID()) {
             super.playerTouch(playerHit);
@@ -141,7 +141,7 @@ public class SpearEntity extends AbstractArrowEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compoundNBT) {
+    public void readAdditionalSaveData(CompoundTag compoundNBT) {
         super.readAdditionalSaveData(compoundNBT);
         if (compoundNBT.contains("Spear", 10)) {
             this.thrownStack = ItemStack.of(compoundNBT.getCompound("Spear"));
@@ -151,16 +151,16 @@ public class SpearEntity extends AbstractArrowEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compoundNBT) {
+    public void addAdditionalSaveData(CompoundTag compoundNBT) {
         super.addAdditionalSaveData(compoundNBT);
-        compoundNBT.put("Spear", this.thrownStack.save(new CompoundNBT()));
+        compoundNBT.put("Spear", this.thrownStack.save(new CompoundTag()));
         compoundNBT.putBoolean("DealtDamage", this.dealtDamage);
     }
 
     /**Tells when to remove the entity, I think*/
     @Override
     protected void tickDespawn() {
-        if (this.pickup != AbstractArrowEntity.PickupStatus.ALLOWED) {
+        if (this.pickup != AbstractArrow.Pickup.ALLOWED) {
             super.tickDespawn();
         }
     }

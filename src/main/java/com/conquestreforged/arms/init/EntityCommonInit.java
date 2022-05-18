@@ -1,7 +1,7 @@
 package com.conquestreforged.arms.init;
 
 import com.conquestreforged.arms.entities.EntityTypes;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
