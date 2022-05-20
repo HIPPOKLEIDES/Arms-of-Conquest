@@ -1,8 +1,6 @@
 package com.conquestreforged.arms.items.armor;
 
 import com.conquestreforged.arms.ArmsOfConquest;
-import com.conquestreforged.arms.items.armor.models.ModelWingedHussarChest;
-import com.conquestreforged.arms.items.armor.models.ModelWingedHussarLegs;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -10,8 +8,6 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class WingedHussarPants extends ArmorModelItem {
 
@@ -21,11 +17,15 @@ public class WingedHussarPants extends ArmorModelItem {
     }
 
     @Override
-    protected <A extends HumanoidModel<?>> A getBaseModelInstance() {
-        return (A) ModelWingedHussarLegs.INSTANCE;
+    public HumanoidModel<?> getModelInstance() {
+        return null;
     }
 
-    @Override
+    //@Override
+    //protected <A extends HumanoidModel<?>> A getBaseModelInstance() {
+    //    return (A) ModelWingedHussarLegs.INSTANCE;
+    //}
+
     protected <A extends HumanoidModel<?>> A displays(A armorModel, EquipmentSlot slot) {
         armorModel.head.visible = false;
         armorModel.hat.visible = false;

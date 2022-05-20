@@ -1,25 +1,24 @@
 package com.conquestreforged.arms.entities;
 
 import com.conquestreforged.arms.init.ItemInit;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -32,12 +31,12 @@ public class SpearEntity extends AbstractArrow {
 
     public SpearEntity(EntityType<? extends SpearEntity> entityType, Level world) {
         super(entityType, world);
-        this.thrownStack = new ItemStack(ItemInit.spear_iron);
+        this.thrownStack = new ItemStack(ItemInit.SPEAR_IRON.get());
     }
 
     public SpearEntity(Level world, LivingEntity livingEntity, ItemStack itemStack) {
         super(EntityTypes.SPEAR_IRON, livingEntity, world);
-        this.thrownStack = new ItemStack(ItemInit.spear_iron);
+        this.thrownStack = new ItemStack(ItemInit.SPEAR_IRON.get());
         this.thrownStack = itemStack.copy();
     }
 
@@ -58,7 +57,7 @@ public class SpearEntity extends AbstractArrow {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
 
-                this.remove();
+                this.remove(RemovalReason.KILLED);
             }
         }
         super.tick();

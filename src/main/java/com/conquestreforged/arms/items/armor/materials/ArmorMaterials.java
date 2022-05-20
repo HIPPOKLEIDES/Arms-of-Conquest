@@ -10,6 +10,13 @@ import net.minecraft.sounds.SoundEvents;
 
 public enum ArmorMaterials implements ArmorMaterial {
 
+    BRONZE("bronze", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
+
+
+
+
+
+
     centurion_helmet("centurion_helmet", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
     corinthian_helmet("corinthian_helmet", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
     jaguar_helmet("jaguar_helmet", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
@@ -19,7 +26,6 @@ public enum ArmorMaterials implements ArmorMaterial {
     winged_hussar("winged_hussar", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
 
 
-    bronze("bronze", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
     chainmail1("chainmail1", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
     cheap("cheap", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),
     crusader("crusader", 800, new int[] {2, 2, 2, 2}, 25, "item.armor.equip_diamond", 0.0f),

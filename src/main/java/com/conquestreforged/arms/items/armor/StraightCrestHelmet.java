@@ -1,13 +1,8 @@
 package com.conquestreforged.arms.items.armor;
 
-import com.conquestreforged.arms.items.armor.models.ModelFlatCrestHelmet;
-import com.conquestreforged.arms.items.armor.models.ModelStraightCrestHelmet;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.item.ArmorMaterial;
 import net.minecraft.world.item.ArmorMaterial;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class StraightCrestHelmet extends ArmorModelItem {
 
@@ -17,11 +12,16 @@ public class StraightCrestHelmet extends ArmorModelItem {
     }
 
     @Override
-    protected <A extends HumanoidModel<?>> A getBaseModelInstance() {
-        return (A) ModelStraightCrestHelmet.INSTANCE;
+    public HumanoidModel<?> getModelInstance() {
+        return null;
     }
 
-    @Override
+    //@Override
+    //protected <A extends HumanoidModel<?>> A getBaseModelInstance() {
+    //    return (A) ModelStraightCrestHelmet.INSTANCE;
+    //}
+
+
     protected <A extends HumanoidModel<?>> A displays(A armorModel, EquipmentSlot slot) {
         armorModel.head.visible = true;
         armorModel.hat.visible = true;

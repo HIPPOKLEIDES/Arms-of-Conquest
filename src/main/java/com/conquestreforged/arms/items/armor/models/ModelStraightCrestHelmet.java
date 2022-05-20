@@ -17,10 +17,12 @@ public class ModelStraightCrestHelmet<T extends LivingEntity> extends HumanoidMo
     public ModelPart crest_fb;
     public ModelPart helmet_main_outer_2;
 
-    public static final ModelStraightCrestHelmet<LivingEntity> INSTANCE = new ModelStraightCrestHelmet<LivingEntity>();
+    //public static final ModelStraightCrestHelmet<LivingEntity> INSTANCE = new ModelStraightCrestHelmet<LivingEntity>();
 
-    public ModelStraightCrestHelmet() {
-        super(0, 0, 64, 64);
+    public ModelStraightCrestHelmet(ModelPart root) {
+        super(root);
+
+        /*super(0, 0, 64, 64);
         this.texWidth = 64;
         this.texHeight = 64;
 
@@ -45,6 +47,8 @@ public class ModelStraightCrestHelmet<T extends LivingEntity> extends HumanoidMo
         //this.shape15_1 = new ModelRenderer(this, 32, 0);
         //this.shape15_1.setRotationPoint(0.0F, 0.0F, 0.0F);
         //this.shape15_1.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F);
+
+         */
     }
 
     @Override

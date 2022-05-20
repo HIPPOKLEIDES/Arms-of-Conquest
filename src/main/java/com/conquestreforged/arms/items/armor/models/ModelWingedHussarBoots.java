@@ -11,13 +11,14 @@ import net.minecraft.world.entity.LivingEntity;
  * Created using Tabula 7.1.0
  */
 public class ModelWingedHussarBoots<T extends LivingEntity> extends HumanoidModel<T> {
-    private final ModelPart rightleg;
-    private final ModelPart leftleg;
+    //private final ModelPart rightleg;
+    //private final ModelPart leftleg;
 
-    public static final ModelWingedHussarBoots<LivingEntity> INSTANCE = new ModelWingedHussarBoots<LivingEntity>();
+    //public static final ModelWingedHussarBoots<LivingEntity> INSTANCE = new ModelWingedHussarBoots<LivingEntity>();
 
-    public ModelWingedHussarBoots() {
-        super(0, 0, 128, 128);
+    public ModelWingedHussarBoots(ModelPart root) {
+        super(root);
+        /*super(0, 0, 128, 128);
         texWidth = 128;
         texHeight = 128;
 
@@ -31,6 +32,8 @@ public class ModelWingedHussarBoots<T extends LivingEntity> extends HumanoidMode
 
         this.rightLeg.addChild(rightleg);
         this.leftLeg.addChild(leftleg);
+
+         */
 
     }
 

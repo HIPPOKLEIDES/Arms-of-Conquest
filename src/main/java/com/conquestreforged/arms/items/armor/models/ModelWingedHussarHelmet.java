@@ -7,12 +7,13 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.LivingEntity;
 
 public class ModelWingedHussarHelmet<T extends LivingEntity> extends HumanoidModel<T> {
-    private final ModelPart helmet;
+    //private final ModelPart helmet;
 
-    public static final ModelWingedHussarHelmet<LivingEntity> INSTANCE = new ModelWingedHussarHelmet<LivingEntity>();
+    //public static final ModelWingedHussarHelmet<LivingEntity> INSTANCE = new ModelWingedHussarHelmet<LivingEntity>();
 
-    public ModelWingedHussarHelmet() {
-        super(1, 0, 128, 128);
+    public ModelWingedHussarHelmet(ModelPart root) {
+        super(root);
+        /*super(1, 0, 128, 128);
         texWidth = 128;
         texHeight = 128;
 
@@ -26,6 +27,8 @@ public class ModelWingedHussarHelmet<T extends LivingEntity> extends HumanoidMod
         helmet.texOffs(4, 99).addBox(0.61F, -38.73F, -5.06F, 0.0F, 8.0F, 9.0F, 0.61F, false);
         
         this.head.addChild(helmet);
+
+         */
     }
 
     @Override

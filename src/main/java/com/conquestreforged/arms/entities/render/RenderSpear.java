@@ -3,6 +3,7 @@ package com.conquestreforged.arms.entities.render;
 import com.conquestreforged.arms.entities.SpearEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -20,10 +21,13 @@ import static com.conquestreforged.arms.ArmsOfConquest.MOD_ID;
 public class RenderSpear extends EntityRenderer<SpearEntity> {
 
     public static final ResourceLocation SPEAR = new ResourceLocation(MOD_ID, "textures/entity/spear.png");
-    private final ModelSpear spearModel = new ModelSpear();
 
-    public RenderSpear(EntityRendererProvider.Context p_i48828_1_) {
-        super(p_i48828_1_);
+    public static final ModelLayerLocation modelLayerLocation = new ModelLayerLocation(SPEAR, "main");
+    private final ModelSpear spearModel;
+
+    public RenderSpear(EntityRendererProvider.Context context) {
+        super(context);
+        this.spearModel = new ModelSpear(context.bakeLayer(modelLayerLocation));
     }
 
     @Override

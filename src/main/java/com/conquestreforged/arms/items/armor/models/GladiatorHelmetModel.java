@@ -1,4 +1,4 @@
-package com.conquestreforged.arms.items.armor;// Made with Blockbench
+package com.conquestreforged.arms.items.armor.models;// Made with Blockbench
 // Paste this code into your mod.
 // Make sure to generate all required imports
 
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class GladiatorHelmetModel<T extends LivingEntity> extends HumanoidModel<T> {
 	private ModelPart bone;
 
-	public static final GladiatorHelmetModel<LivingEntity> INSTANCE = new GladiatorHelmetModel<LivingEntity>();
+	//public static final GladiatorHelmetModel<LivingEntity> INSTANCE = new GladiatorHelmetModel<LivingEntity>();
 
 	public ModelPart head01;
 	public ModelPart muzzle;
@@ -58,8 +58,9 @@ public class GladiatorHelmetModel<T extends LivingEntity> extends HumanoidModel<
 	public ModelPart rAnter07d;
 	public ModelPart rAnter07e;
 
-	public GladiatorHelmetModel() {
-		super(0, 0, 128, 128);
+	public GladiatorHelmetModel(ModelPart root) {
+		super(root);
+		/*super(0, 0, 128, 128);
 		this.texWidth = 128;
 		this.texHeight = 128;
 
@@ -282,7 +283,7 @@ public class GladiatorHelmetModel<T extends LivingEntity> extends HumanoidModel<
 		this.lAnter03a.addChild(this.lAnter03c);
 		this.lAnter05a1.addChild(this.lAnter05a2);
 
-		this.getHead().addChild(this.head01);
+		this.getHead().addChild(this.head01); */
 	}
 
 	@Override
