@@ -6,8 +6,8 @@ import com.conquestreforged.arms.items.armor.FlatCrestHelmet;
 import com.conquestreforged.arms.items.armor.GenericArmorItem;
 import com.conquestreforged.arms.items.armor.materials.ArmorMaterials;
 import com.conquestreforged.arms.items.armor.models.ModelFlatCrestHelmet;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -15,7 +15,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,10 +42,12 @@ public class ItemInit {
 
     public static final DeferredRegister<Item> REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
-    public static final RegistryObject<Item> CENTURION_HELMET = REGISTER.register("centurion_helmet", () ->
-            new FlatCrestHelmet(ArmorMaterials.centurion_helmet, EquipmentSlot.HEAD, genericCombatProps, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION));
+    //public static final RegistryObject<Item> CENTURION_HELMET = REGISTER.register("centurion_helmet", () ->
+    //        new FlatCrestHelmet(ArmorMaterials.centurion_helmet, EquipmentSlot.HEAD, genericCombatProps, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION));
 
-    //public static final List<RegistryObject<Item>> CENTURION_HELMET = registerArmorModelMultiMaterials(new FlatCrestHelmet(ArmorMaterials.centurion_helmet, EquipmentSlot.HEAD, genericCombatProps), ironMaterials);
+
+
+    public static final List<RegistryObject<Item>> CENTURION_HELMET = registerArmorModelMultiMaterials(genericCombatProps, "centurion_helmet", EquipmentSlot.HEAD, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, ironMaterials);
 
     public static final RegistryObject<Item> SPEAR_IRON = REGISTER.register("spear_iron", () ->
             new ModSpear(genericCombatProps, EntityTypes.SPEAR_IRON, 7.0F));
@@ -68,25 +69,29 @@ public class ItemInit {
     //public static Item winged_hussar_pants = new WingedHussarPants(ArmorMaterials.winged_hussar,EquipmentSlot.LEGS, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_pants"));
     //public static Item winged_hussar_boots = new WingedHussarBoots(ArmorMaterials.winged_hussar,EquipmentSlot.FEET, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_boots"));
 
-    private static <T extends ArmorItem> List<RegistryObject<Item>> registerArmorModelMultiMaterials(T baseItem, List<ArmorMaterial> armorMaterials) {
-        List<RegistryObject<Item>> armorList = new ArrayList<>();
-        RegistryObject<Item> registryObject = (REGISTER.register( "centurion_helmet", () -> {
-            try {
-                return baseItem.getClass().getConstructor(ArmorMaterial.class, EquipmentSlot.class, Item.Properties.class)
-                        .newInstance(ArmorMaterials.centurion_helmet, EquipmentSlot.HEAD, genericCombatProps);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+    private static List<RegistryObject<Item>> registerArmorModelMultiMaterials(Item.Properties props, String texture, EquipmentSlot slot, Class modelClass, ModelLayerLocation layerLocation, List<ArmorMaterial> armorMaterials) {
+        List<RegistryObject<Item>> armorsList = new ArrayList<>();
+        armorMaterials.forEach(armorMaterial -> {
+            switch (armorMaterial.getName()) {
+                case "iron":
+                    armorsList.add(REGISTER.register(texture, () ->
+                            new FlatCrestHelmet(armorMaterial, slot, props, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, constructArmorTexPath(texture, false))));
+                    break;
+                case "bronze":
+                    armorsList.add(REGISTER.register(texture, () ->
+                            new FlatCrestHelmet(armorMaterial, slot, props, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, constructArmorTexPath(texture, false))));
+                    break;
+                case "diamond":
+                    armorsList.add(REGISTER.register("refined_" + texture, () ->
+                            new FlatCrestHelmet(armorMaterial, slot, props, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, constructArmorTexPath(texture, false))));
+                    break;
+                case "netherite":
+                    armorsList.add(REGISTER.register("exquisite_" + texture, () ->
+                            new FlatCrestHelmet(armorMaterial, slot, props, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, constructArmorTexPath(texture, false))));
+                    break;
             }
-            return null;
-        }));
-        armorList.add(registryObject);
-        return armorList;
+        });
+        return armorsList;
     }
 
 
