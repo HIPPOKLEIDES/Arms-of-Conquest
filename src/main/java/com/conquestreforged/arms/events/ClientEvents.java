@@ -1,34 +1,31 @@
 package com.conquestreforged.arms.events;
 
-import com.conquestreforged.arms.items.ModSpear;
-import com.conquestreforged.arms.items.armor.models.ModelFlatCrestHelmet;
 import com.conquestreforged.arms.network.NetworkHandler;
 import com.conquestreforged.arms.network.PacketOverextendedReachAttack;
+import com.conquestreforged.arms.util.ModTags;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.model.Model;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import static com.conquestreforged.arms.ArmsOfConquest.MOD_ID;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEvents {
@@ -38,7 +35,7 @@ public class ClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         Player playerEntity = minecraft.player;
         ItemStack weapon = playerEntity.getMainHandItem();
-        if (weapon.getItem() instanceof ModSpear && getEntityMouseOverExtension(7.0F) instanceof EntityHitResult) {
+        if (isValuableBlock(weapon.getItem()) && getEntityMouseOverExtension(7.0F) instanceof EntityHitResult) {
 
             if (minecraft.gameMode.getPlayerMode() != GameType.SPECTATOR || isTargetNamedMenuProvider(minecraft.hitResult)) {
                 int scaledHeight = minecraft.getWindow().getGuiScaledHeight();
@@ -99,7 +96,7 @@ public class ClientEvents {
         Player player = minecraft.player;
         if (minecraft.level != null && minecraft.screen == null && !minecraft.isPaused() && player != null) {
             ItemStack weapon = player.getMainHandItem();
-            if (weapon.getItem() instanceof ModSpear) {
+            if (isValuableBlock(weapon.getItem())) {
                 //Log.info("Attempting Reach Attack!");
                 float reach = 7.0F;
                 HitResult rayTraceResult = getEntityMouseOverExtension(reach);
@@ -169,6 +166,10 @@ public class ClientEvents {
             }
         }
         return (HitResult)result;
+    }
+
+    private static boolean isValuableBlock(Item item) {
+        return Registry.ITEM.getHolderOrThrow(Registry.ITEM.getResourceKey(item).get()).is(ModTags.Items.SPEARS);
     }
 
 }

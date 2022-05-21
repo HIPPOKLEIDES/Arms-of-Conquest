@@ -1,5 +1,6 @@
 package com.conquestreforged.arms.init;
 
+import com.conquestreforged.arms.entities.EntityTypes;
 import com.conquestreforged.arms.items.ModSpear;
 import com.conquestreforged.arms.items.armor.FlatCrestHelmet;
 import com.conquestreforged.arms.items.armor.GenericArmorItem;
@@ -43,7 +44,7 @@ public class ItemInit {
             new FlatCrestHelmet(ArmorMaterials.centurion_helmet, EquipmentSlot.HEAD, genericCombatProps));
 
     public static final RegistryObject<Item> SPEAR_IRON = REGISTER.register("spear_iron", () ->
-            new ModSpear(genericCombatProps));
+            new ModSpear(genericCombatProps, EntityTypes.SPEAR_IRON));
 
     public static final RegistryObject<Item> CRUSADER_CHEST = REGISTER.register("crusader_chest", () ->
             new GenericArmorItem(ArmorMaterials.BRONZE, EquipmentSlot.CHEST, genericCombatProps, constructArmorTexPath("crusader", false)));

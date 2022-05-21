@@ -1,6 +1,7 @@
 package com.conquestreforged.arms.items;
 
 import com.conquestreforged.arms.entities.SpearEntity;
+import com.conquestreforged.arms.init.ItemInit;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
@@ -30,9 +32,11 @@ import net.minecraft.world.phys.Vec3;
 public class ModSpear extends Item {
 
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
+    private EntityType spearEntity;
 
-    public ModSpear(Properties props) {
+    public ModSpear(Properties props, EntityType spearEntity) {
         super(props);
+        this.spearEntity = spearEntity;
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", 8.0D, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", (double)-2.9F, AttributeModifier.Operation.ADDITION));
@@ -62,7 +66,7 @@ public class ModSpear extends Item {
                             p_220047_1_.broadcastBreakEvent(entityLiving.getUsedItemHand());
                         });
                         if (j == 0) {
-                            SpearEntity tridententity = new SpearEntity(worldIn, playerentity, stack);
+                            SpearEntity tridententity = new SpearEntity(worldIn, playerentity, stack, spearEntity, ItemInit.SPEAR_IRON.get());
                             tridententity.shootFromRotation(playerentity, playerentity.xRotO, playerentity.yRotO, 0.0F, 2.5F + (float) j * 0.5F, 1.0F);
                             if (playerentity.getAbilities().instabuild) {
                                 tridententity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;

@@ -1,6 +1,5 @@
 package com.conquestreforged.arms.entities;
 
-import com.conquestreforged.arms.init.ItemInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +13,7 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -27,16 +27,19 @@ public class SpearEntity extends AbstractArrow {
     private ItemStack thrownStack;
     private boolean dealtDamage;
     public int clientSideReturnTridentTickCount;
+    Item spearItem;
+    EntityType spearEntityType;
 
-
-    public SpearEntity(EntityType<? extends SpearEntity> entityType, Level world) {
+    public SpearEntity(EntityType<? extends SpearEntity> entityType, Level world, Item spearItem) {
         super(entityType, world);
-        this.thrownStack = new ItemStack(ItemInit.SPEAR_IRON.get());
+        this.spearItem = spearItem;
+        this.thrownStack = new ItemStack(spearItem);
     }
 
-    public SpearEntity(Level world, LivingEntity livingEntity, ItemStack itemStack) {
-        super(EntityTypes.SPEAR_IRON, livingEntity, world);
-        this.thrownStack = new ItemStack(ItemInit.SPEAR_IRON.get());
+    public SpearEntity(Level world, LivingEntity livingEntity, ItemStack itemStack, EntityType spearEntityType, Item spearItem) {
+        super(spearEntityType, livingEntity, world);
+        this.spearEntityType = spearEntityType;
+        this.thrownStack = new ItemStack(spearItem);
         this.thrownStack = itemStack.copy();
     }
 
