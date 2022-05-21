@@ -1,8 +1,10 @@
 package com.conquestreforged.arms.items.armor;
 
-import com.conquestreforged.arms.items.armor.models.ModelFlatCrestHelmet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
@@ -14,13 +16,18 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 
-public abstract class ArmorModelItem extends ArmorItem {
+public class ArmorModelItem<T> extends ArmorItem {
 
-    private HumanoidModel model;
+    private final Class<T> model;
+    private final ModelLayerLocation layerLocation;
+    private final String armorTexture;
 
-    public ArmorModelItem(ArmorMaterial material, EquipmentSlot head, Properties props) {
+    public ArmorModelItem(ArmorMaterial material, EquipmentSlot head, Properties props, Class<T> model, ModelLayerLocation layerLocation, String armorTexture) {
         super(material, head, props);
         this.model = model;
+        this.layerLocation = layerLocation;
+        this.armorTexture = armorTexture;
+
     }
 
     @Override
@@ -31,13 +38,7 @@ public abstract class ArmorModelItem extends ArmorItem {
             public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
                 try {
                     return getModelInstance();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -45,20 +46,12 @@ public abstract class ArmorModelItem extends ArmorItem {
         });
     }
 
-    public abstract  HumanoidModel<?> getModelInstance() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException;
+    public HumanoidModel<?> getModelInstance() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        return (HumanoidModel<?>) model.getConstructor(ModelPart.class).newInstance(Minecraft.getInstance().getEntityModels().bakeLayer(layerLocation));
+    }
 
-    /*static class ModelSupplier implements IItemRenderProperties {
-
-        private HumanoidModel instance;
-
-        public ModelSupplier(HumanoidModel instance) {
-            this.instance = instance;
-        }
-
-        @Override
-        public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
-            if (instance == null) instance = new ModelFlatCrestHelmet(Minecraft.getInstance().getEntityModels().bakeLayer(ModelFlatCrestHelmet.LAYER_LOCATION));
-            return instance;
-        }
-    }*/
+    @Override
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+        return armorTexture;
+    }
 }

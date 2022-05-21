@@ -2,10 +2,11 @@ package com.conquestreforged.arms.init;
 
 import com.conquestreforged.arms.entities.EntityTypes;
 import com.conquestreforged.arms.items.ModSpear;
-import com.conquestreforged.arms.items.armor.FlatCrestHelmet;
+import com.conquestreforged.arms.items.armor.ArmorModelItem;
 import com.conquestreforged.arms.items.armor.GenericArmorItem;
 import com.conquestreforged.arms.items.armor.materials.ArmorMaterials;
 import com.conquestreforged.arms.items.armor.models.ModelFlatCrestHelmet;
+import com.conquestreforged.arms.items.armor.models.ModelWingedHussarBoots;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
@@ -47,7 +48,8 @@ public class ItemInit {
 
 
 
-    public static final List<RegistryObject<Item>> CENTURION_HELMET = registerArmorModelMultiMaterials(genericCombatProps, "centurion_helmet", EquipmentSlot.HEAD, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, ironMaterials);
+    public static final List<RegistryObject<Item>> CENTURION_HELMET = registerArmorModelMultiMaterials("centurion_helmet", genericCombatProps, "centurion_helmet", EquipmentSlot.HEAD, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, ironMaterials);
+    public static final List<RegistryObject<Item>> WINGED_HUSSAR_BOOTS = registerArmorModelMultiMaterials("winged_hussar_boots", genericCombatProps, "winged_hussar", EquipmentSlot.FEET, ModelWingedHussarBoots.class, ModelWingedHussarBoots.LAYER_LOCATION, ironMaterials);
 
     public static final RegistryObject<Item> SPEAR_IRON = REGISTER.register("spear_iron", () ->
             new ModSpear(genericCombatProps, EntityTypes.SPEAR_IRON, 7.0F));
@@ -69,25 +71,25 @@ public class ItemInit {
     //public static Item winged_hussar_pants = new WingedHussarPants(ArmorMaterials.winged_hussar,EquipmentSlot.LEGS, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_pants"));
     //public static Item winged_hussar_boots = new WingedHussarBoots(ArmorMaterials.winged_hussar,EquipmentSlot.FEET, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_boots"));
 
-    private static List<RegistryObject<Item>> registerArmorModelMultiMaterials(Item.Properties props, String texture, EquipmentSlot slot, Class modelClass, ModelLayerLocation layerLocation, List<ArmorMaterial> armorMaterials) {
+    private static List<RegistryObject<Item>> registerArmorModelMultiMaterials(String name, Item.Properties props, String texture, EquipmentSlot slot, Class modelClass, ModelLayerLocation layerLocation, List<ArmorMaterial> armorMaterials) {
         List<RegistryObject<Item>> armorsList = new ArrayList<>();
         armorMaterials.forEach(armorMaterial -> {
             switch (armorMaterial.getName()) {
                 case "iron":
-                    armorsList.add(REGISTER.register(texture, () ->
-                            new FlatCrestHelmet(armorMaterial, slot, props, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, constructArmorTexPath(texture, false))));
+                    armorsList.add(REGISTER.register(name, () ->
+                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorTexPath(texture, false))));
                     break;
                 case "bronze":
-                    armorsList.add(REGISTER.register(texture, () ->
-                            new FlatCrestHelmet(armorMaterial, slot, props, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, constructArmorTexPath(texture, false))));
+                    armorsList.add(REGISTER.register(name, () ->
+                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorTexPath(texture, false))));
                     break;
                 case "diamond":
-                    armorsList.add(REGISTER.register("refined_" + texture, () ->
-                            new FlatCrestHelmet(armorMaterial, slot, props, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, constructArmorTexPath(texture, false))));
+                    armorsList.add(REGISTER.register("refined_" + name, () ->
+                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorTexPath(texture, false))));
                     break;
                 case "netherite":
-                    armorsList.add(REGISTER.register("exquisite_" + texture, () ->
-                            new FlatCrestHelmet(armorMaterial, slot, props, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, constructArmorTexPath(texture, false))));
+                    armorsList.add(REGISTER.register("exquisite_" + name, () ->
+                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorTexPath(texture, false))));
                     break;
             }
         });

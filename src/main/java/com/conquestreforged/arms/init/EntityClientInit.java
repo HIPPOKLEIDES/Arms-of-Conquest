@@ -4,6 +4,7 @@ import com.conquestreforged.arms.entities.EntityTypes;
 import com.conquestreforged.arms.entities.render.ModelSpear;
 import com.conquestreforged.arms.entities.render.RenderSpear;
 import com.conquestreforged.arms.items.armor.models.ModelFlatCrestHelmet;
+import com.conquestreforged.arms.items.armor.models.ModelWingedHussarBoots;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,6 +16,7 @@ public class EntityClientInit {
     @SubscribeEvent
     public static void layers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ModelFlatCrestHelmet.LAYER_LOCATION, ModelFlatCrestHelmet::createHeadLayer);
+        event.registerLayerDefinition(ModelWingedHussarBoots.LAYER_LOCATION, ModelWingedHussarBoots::createBodyLayer);
         event.registerLayerDefinition(RenderSpear.modelLayerLocation, ModelSpear::createLayer);
     }
 
