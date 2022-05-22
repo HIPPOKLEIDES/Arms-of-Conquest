@@ -16,7 +16,8 @@ public class ModelWingedHussarBoots<T extends LivingEntity> extends HumanoidMode
     private final ModelPart rightleg;
     private final ModelPart leftleg;
 
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(MOD_ID, "winged_hussar"), "main");
+    //Winged Hussar chest also uses right_leg and left_leg, so texture here needs to be separate
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(MOD_ID, "winged_hussar_boots"), "main");
 
     public ModelWingedHussarBoots(ModelPart root) {
         super(root);

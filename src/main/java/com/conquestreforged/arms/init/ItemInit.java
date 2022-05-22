@@ -5,8 +5,7 @@ import com.conquestreforged.arms.items.ModSpear;
 import com.conquestreforged.arms.items.armor.ArmorModelItem;
 import com.conquestreforged.arms.items.armor.GenericArmorItem;
 import com.conquestreforged.arms.items.armor.materials.ArmorMaterials;
-import com.conquestreforged.arms.items.armor.models.ModelFlatCrestHelmet;
-import com.conquestreforged.arms.items.armor.models.ModelWingedHussarBoots;
+import com.conquestreforged.arms.items.armor.models.*;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
@@ -48,8 +47,31 @@ public class ItemInit {
 
 
 
-    public static final List<RegistryObject<Item>> CENTURION_HELMET = registerArmorModelMultiMaterials("centurion_helmet", genericCombatProps, "centurion_helmet", EquipmentSlot.HEAD, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION, ironMaterials);
-    public static final List<RegistryObject<Item>> WINGED_HUSSAR_BOOTS = registerArmorModelMultiMaterials("winged_hussar_boots", genericCombatProps, "winged_hussar", EquipmentSlot.FEET, ModelWingedHussarBoots.class, ModelWingedHussarBoots.LAYER_LOCATION, ironMaterials);
+    public static final List<RegistryObject<Item>> CENTURION_HELMET = registerArmorModelMultiMaterials(
+            "centurion_helmet", genericCombatProps, "centurion_helmet",
+            EquipmentSlot.HEAD,
+            ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION,
+            ironMaterials);
+    public static final List<RegistryObject<Item>> WINGED_HUSSAR_BOOTS = registerArmorModelMultiMaterials(
+            "winged_hussar_boots", genericCombatProps, "winged_hussar_boots",
+            EquipmentSlot.FEET,
+            ModelWingedHussarBoots.class, ModelWingedHussarBoots.LAYER_LOCATION,
+            ironMaterials);
+    public static final List<RegistryObject<Item>> WINGED_HUSSAR_CHEST = registerArmorModelMultiMaterials(
+            "winged_hussar_chest", genericCombatProps, "winged_hussar",
+            EquipmentSlot.CHEST,
+            ModelWingedHussarChest.class, ModelWingedHussarChest.LAYER_LOCATION,
+            ironMaterials);
+    public static final List<RegistryObject<Item>> WINGED_HUSSAR_LEGS = registerArmorModelMultiMaterials(
+            "winged_hussar_legs", genericCombatProps, "winged_hussar_legs",
+            EquipmentSlot.LEGS,
+            ModelWingedHussarLegs.class, ModelWingedHussarLegs.LAYER_LOCATION,
+            ironMaterials);
+    public static final List<RegistryObject<Item>> WINGED_HUSSAR_HELMET = registerArmorModelMultiMaterials(
+            "winged_hussar_helmet", genericCombatProps, "winged_hussar_helmet",
+            EquipmentSlot.HEAD,
+            ModelWingedHussarHelmet.class, ModelWingedHussarHelmet.LAYER_LOCATION,
+            ironMaterials);
 
     public static final RegistryObject<Item> SPEAR_IRON = REGISTER.register("spear_iron", () ->
             new ModSpear(genericCombatProps, EntityTypes.SPEAR_IRON, 7.0F));
