@@ -1,6 +1,7 @@
 package com.conquestreforged.arms.init;
 
 import com.conquestreforged.arms.entities.EntityTypes;
+import com.conquestreforged.arms.items.ModShield;
 import com.conquestreforged.arms.items.ModSpear;
 import com.conquestreforged.arms.items.armor.ArmorModelItem;
 import com.conquestreforged.arms.items.armor.GenericArmorItem;
@@ -81,6 +82,8 @@ public class ItemInit {
 
     public static final List<RegistryObject<Item>> KNIGHT_ARMORS = registerArmorSetMultiMaterials(genericCombatProps, "knight", ironMaterials);
 
+    public static final RegistryObject<Item> NORMAN_SHIELD = registerShield("norman_shield", genericCombatProps);
+
 
     //public static Item corinthian_helmet = new StraightCrestHelmet(ArmorMaterials.corinthian_helmet,EquipmentSlot.HEAD, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "corinthian_helmet"));
     //public static Item jaguar_helmet = new StraightCrestHelmet(ArmorMaterials.jaguar_helmet,EquipmentSlot.HEAD, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "jaguar_helmet"));
@@ -92,6 +95,12 @@ public class ItemInit {
     //public static Item winged_hussar_chest = new WingedHussarChest(ArmorMaterials.winged_hussar,EquipmentSlot.CHEST, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_chest"));
     //public static Item winged_hussar_pants = new WingedHussarPants(ArmorMaterials.winged_hussar,EquipmentSlot.LEGS, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_pants"));
     //public static Item winged_hussar_boots = new WingedHussarBoots(ArmorMaterials.winged_hussar,EquipmentSlot.FEET, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_boots"));
+
+    private static RegistryObject<Item> registerShield(String name, Item.Properties props) {
+        RegistryObject<Item> item = REGISTER.register(name, () -> new ModShield(props));
+        dataGenItemRecipos.add(item);
+        return item;
+    }
 
     private static List<RegistryObject<Item>> registerArmorModelMultiMaterials(String name, Item.Properties props, String texture, EquipmentSlot slot, Class modelClass, ModelLayerLocation layerLocation, List<ArmorMaterial> armorMaterials) {
         List<RegistryObject<Item>> armorsList = new ArrayList<>();
@@ -115,6 +124,8 @@ public class ItemInit {
                     break;
             }
         });
+        dataGenItemModels.addAll(armorsList);
+        dataGenItemRecipos.addAll(armorsList);
         return armorsList;
     }
 

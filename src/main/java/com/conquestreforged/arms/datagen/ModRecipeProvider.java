@@ -25,7 +25,11 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_iron_armor", inventoryTrigger(ItemPredicate.Builder.item()
                         .of(Items.IRON_CHESTPLATE).build()))
                 .save(recipeConsumer);
-        ItemInit.dataGenItemRecipos.forEach(registryItem -> createArmorStoneCutterRecipe(recipeConsumer, (ArmorItem) registryItem.get()));
+        ItemInit.dataGenItemRecipos.forEach(registryItem -> {
+            if (registryItem.get() instanceof ArmorItem) {
+                createArmorStoneCutterRecipe(recipeConsumer, (ArmorItem) registryItem.get());
+            }
+        });
     }
 
     private void createArmorStoneCutterRecipe (Consumer<FinishedRecipe> recipeConsumer, ArmorItem result) {

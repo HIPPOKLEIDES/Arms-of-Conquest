@@ -3,10 +3,12 @@ package com.conquestreforged.arms;
 
 import com.conquestreforged.arms.init.ItemInit;
 import com.conquestreforged.arms.network.NetworkHandler;
+import com.conquestreforged.arms.util.ModItemProperties;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -20,6 +22,7 @@ public class ArmsOfConquest {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 
         ItemInit.REGISTER.register(bus);
 
@@ -31,5 +34,9 @@ public class ArmsOfConquest {
         ev.enqueueWork(() -> {
             NetworkHandler.init();
         });
+    }
+
+    private void clientSetup(final FMLClientSetupEvent event) {
+        ModItemProperties.addCustomItemProperties();
     }
 }
