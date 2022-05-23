@@ -1,0 +1,13 @@
+{
+    "parent": "arms_of_conquest:item/light_crossbow",
+    "textures": {
+        "layer0": "arms_of_conquest:item/light_crossbow_2"
+    },
+    "display": {
+        "firstperson_righthand": {
+            "rotation": [ -90, 0, -55 ],
+            "translation": [ 8.13, -4.6, -9.13],
+            "scale": [ 0.68, 0.68, 0.68 ]
+        }
+    }
+}

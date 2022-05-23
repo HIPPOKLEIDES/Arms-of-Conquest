@@ -2,7 +2,7 @@ package com.conquestreforged.arms.datagen;
 
 import com.conquestreforged.arms.init.ItemInit;
 import com.conquestreforged.arms.items.ModShield;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import com.conquestreforged.arms.recipe.ModRecipes;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -11,6 +11,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 
 import java.util.function.Consumer;
@@ -22,25 +23,20 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(Items.IRON_CHESTPLATE), ItemInit.CRUSADER_CHEST.get())
-                .unlockedBy("has_iron_armor", inventoryTrigger(ItemPredicate.Builder.item()
-                        .of(Items.IRON_CHESTPLATE).build()))
-                .save(recipeConsumer);
-        ItemInit.dataGenItemRecipos.forEach(registryItem -> {
+        armsStation(Ingredient.of(Items.IRON_CHESTPLATE), ItemInit.CRUSADER_CHEST.get()).save(recipeConsumer);
+
+        ItemInit.dataGenItemRecipes.forEach(registryItem -> {
             Item item = registryItem.get();
             if (item instanceof ArmorItem) {
-                createArmorStoneCutterRecipe(recipeConsumer, (ArmorItem) registryItem.get());
+                createArmorRecipe(recipeConsumer, (ArmorItem) registryItem.get());
             }
             if (item instanceof ModShield) {
-                SingleItemRecipeBuilder.stonecutting(Ingredient.of(Items.SHIELD), item)
-                        .unlockedBy("has_" + Items.SHIELD, inventoryTrigger(ItemPredicate.Builder.item()
-                                .of(Items.SHIELD).build()))
-                        .save(recipeConsumer);
+                armsStation(Ingredient.of(Items.SHIELD), item).save(recipeConsumer);
             }
         });
     }
 
-    private void createArmorStoneCutterRecipe (Consumer<FinishedRecipe> recipeConsumer, ArmorItem result) {
+    private void createArmorRecipe(Consumer<FinishedRecipe> recipeConsumer, ArmorItem result) {
         Item ingredientItem;
         switch (result.getMaterial().getName()) {
             default:
@@ -98,9 +94,10 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 break;
         }
 
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(ingredientItem), result)
-                .unlockedBy("has_" + ingredientItem, inventoryTrigger(ItemPredicate.Builder.item()
-                        .of(ingredientItem).build()))
-                .save(recipeConsumer);
+        armsStation(Ingredient.of(ingredientItem), result).save(recipeConsumer);
+    }
+
+    public static SingleItemRecipeBuilder armsStation(Ingredient ingredient, ItemLike itemLike) {
+        return new SingleItemRecipeBuilder(ModRecipes.ARMS_STATION_SERIALIZER.get(), ingredient, itemLike, 1);
     }
 }

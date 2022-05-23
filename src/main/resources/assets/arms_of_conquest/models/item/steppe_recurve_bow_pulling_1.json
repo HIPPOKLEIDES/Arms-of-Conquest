@@ -1,0 +1,6 @@
+{
+    "parent": "arms_of_conquest:item/steppe_recurve_bow",
+    "textures": {
+        "layer0": "arms_of_conquest:item/steppe_recurve_bow_2"
+    }
+}

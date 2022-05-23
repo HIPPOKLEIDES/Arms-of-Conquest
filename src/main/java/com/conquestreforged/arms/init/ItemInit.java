@@ -1,6 +1,8 @@
 package com.conquestreforged.arms.init;
 
 import com.conquestreforged.arms.entities.EntityTypes;
+import com.conquestreforged.arms.items.ModBow;
+import com.conquestreforged.arms.items.ModCrossbow;
 import com.conquestreforged.arms.items.ModShield;
 import com.conquestreforged.arms.items.ModSpear;
 import com.conquestreforged.arms.items.armor.ArmorModelItem;
@@ -9,9 +11,7 @@ import com.conquestreforged.arms.items.armor.materials.ArmorMaterials;
 import com.conquestreforged.arms.items.armor.models.*;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -27,7 +27,7 @@ public class ItemInit {
     //Here we store a list of our items that get automatically generated model files
     public static final List<RegistryObject<Item>> dataGenItemModels = new ArrayList<>();
     //Here we store a list of our items that get automatically generated recipe+advancement files
-    public static final List<RegistryObject<Item>> dataGenItemRecipos = new ArrayList<>();
+    public static final List<RegistryObject<Item>> dataGenItemRecipes = new ArrayList<>();
 
 
     public static final Item.Properties genericCombatProps = new Item.Properties()
@@ -42,11 +42,6 @@ public class ItemInit {
 
 
     public static final DeferredRegister<Item> REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
-
-    //public static final RegistryObject<Item> CENTURION_HELMET = REGISTER.register("centurion_helmet", () ->
-    //        new FlatCrestHelmet(ArmorMaterials.centurion_helmet, EquipmentSlot.HEAD, genericCombatProps, ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION));
-
-
 
     public static final List<RegistryObject<Item>> CENTURION_HELMET = registerArmorModelMultiMaterials(
             "centurion_helmet", genericCombatProps, "centurion_helmet",
@@ -78,11 +73,16 @@ public class ItemInit {
             new ModSpear(genericCombatProps, EntityTypes.SPEAR_IRON, 7.0F));
 
     public static final RegistryObject<Item> CRUSADER_CHEST = REGISTER.register("crusader_chest", () ->
-            new GenericArmorItem(ArmorMaterials.BRONZE, EquipmentSlot.CHEST, genericCombatProps, constructArmorTexPath("crusader", false)));
+            new GenericArmorItem(
+                    ArmorMaterials.BRONZE, EquipmentSlot.CHEST, genericCombatProps,
+                    constructArmorTexPath("crusader", false)));
 
-    public static final List<RegistryObject<Item>> KNIGHT_ARMORS = registerArmorSetMultiMaterials(genericCombatProps, "knight", ironMaterials);
+    public static final List<RegistryObject<Item>> KNIGHT_ARMORS = registerArmorSetMultiMaterials(
+            genericCombatProps, "knight", ironMaterials);
 
     public static final RegistryObject<Item> NORMAN_SHIELD = registerShield("norman_shield", genericCombatProps);
+    public static final RegistryObject<Item> STEPPE_RECURVE_BOW = registerBow("steppe_recurve_bow", genericCombatProps);
+    public static final RegistryObject<Item> LIGHT_CROSSBOW = registerCrossBow("light_crossbow", genericCombatProps);
 
 
     //public static Item corinthian_helmet = new StraightCrestHelmet(ArmorMaterials.corinthian_helmet,EquipmentSlot.HEAD, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "corinthian_helmet"));
@@ -96,9 +96,21 @@ public class ItemInit {
     //public static Item winged_hussar_pants = new WingedHussarPants(ArmorMaterials.winged_hussar,EquipmentSlot.LEGS, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_pants"));
     //public static Item winged_hussar_boots = new WingedHussarBoots(ArmorMaterials.winged_hussar,EquipmentSlot.FEET, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_boots"));
 
+    private static RegistryObject<Item> registerCrossBow(String name, Item.Properties props) {
+        RegistryObject<Item> item = REGISTER.register(name, () -> new ModCrossbow(props));
+        dataGenItemRecipes.add(item);
+        return item;
+    }
+
+    private static RegistryObject<Item> registerBow(String name, Item.Properties props) {
+        RegistryObject<Item> item = REGISTER.register(name, () -> new ModBow(props));
+        dataGenItemRecipes.add(item);
+        return item;
+    }
+
     private static RegistryObject<Item> registerShield(String name, Item.Properties props) {
         RegistryObject<Item> item = REGISTER.register(name, () -> new ModShield(props));
-        dataGenItemRecipos.add(item);
+        dataGenItemRecipes.add(item);
         return item;
     }
 
@@ -125,7 +137,7 @@ public class ItemInit {
             }
         });
         dataGenItemModels.addAll(armorsList);
-        dataGenItemRecipos.addAll(armorsList);
+        dataGenItemRecipes.addAll(armorsList);
         return armorsList;
     }
 
@@ -165,7 +177,7 @@ public class ItemInit {
         armorsList.add(REGISTER.register(texture + "_boots", () -> new GenericArmorItem(armorMaterial, EquipmentSlot.FEET, props, constructArmorTexPath(texture, false))));
 
         dataGenItemModels.addAll(armorsList);
-        dataGenItemRecipos.addAll(armorsList);
+        dataGenItemRecipes.addAll(armorsList);
         return armorsList;
     }
 

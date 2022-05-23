@@ -40,7 +40,7 @@ public class ArmorStationRecipe extends SingleItemRecipe {
 
     @Override
     public boolean isSpecial() {
-        return super.isSpecial();
+        return true;
     }
 
     @Override
