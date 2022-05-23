@@ -1,6 +1,7 @@
 package com.conquestreforged.arms.datagen;
 
 import com.conquestreforged.arms.init.ItemInit;
+import com.conquestreforged.arms.items.ModShield;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -26,8 +27,15 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         .of(Items.IRON_CHESTPLATE).build()))
                 .save(recipeConsumer);
         ItemInit.dataGenItemRecipos.forEach(registryItem -> {
-            if (registryItem.get() instanceof ArmorItem) {
+            Item item = registryItem.get();
+            if (item instanceof ArmorItem) {
                 createArmorStoneCutterRecipe(recipeConsumer, (ArmorItem) registryItem.get());
+            }
+            if (item instanceof ModShield) {
+                SingleItemRecipeBuilder.stonecutting(Ingredient.of(Items.SHIELD), item)
+                        .unlockedBy("has_" + Items.SHIELD, inventoryTrigger(ItemPredicate.Builder.item()
+                                .of(Items.SHIELD).build()))
+                        .save(recipeConsumer);
             }
         });
     }

@@ -1,9 +1,14 @@
 package com.conquestreforged.arms;
 
 
+import com.conquestreforged.arms.init.BlockInit;
 import com.conquestreforged.arms.init.ItemInit;
+import com.conquestreforged.arms.init.MenuTypeInit;
 import com.conquestreforged.arms.network.NetworkHandler;
+import com.conquestreforged.arms.recipe.ModRecipes;
+import com.conquestreforged.arms.screens.ArmorStationScreen;
 import com.conquestreforged.arms.util.ModItemProperties;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -25,6 +30,9 @@ public class ArmsOfConquest {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 
         ItemInit.REGISTER.register(bus);
+        BlockInit.BLOCKS.register(bus);
+        MenuTypeInit.MENUS.register(bus);
+        ModRecipes.register(bus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -38,5 +46,6 @@ public class ArmsOfConquest {
 
     private void clientSetup(final FMLClientSetupEvent event) {
         ModItemProperties.addCustomItemProperties();
+        MenuScreens.register(MenuTypeInit.ARMS_STATION_MENU.get(), ArmorStationScreen::new);
     }
 }
