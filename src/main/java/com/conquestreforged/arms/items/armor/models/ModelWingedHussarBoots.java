@@ -33,10 +33,10 @@ public class ModelWingedHussarBoots<T extends LivingEntity> extends HumanoidMode
         CubeDeformation scale2 = new CubeDeformation(0.266F, 0.266F, 0.266F);
 
         //Right Foot
-        PartDefinition rightLeg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(112, 80).addBox(-1.98F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale1), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition rightLeg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 16).addBox(-1.98F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale1), PartPose.offset(0.0F, 0.0F, 0.0F));
 
         //Left Foot
-        PartDefinition leftLeg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(112, 64).addBox(-2.02F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale2), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition leftLeg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 0).addBox(-2.02F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale2), PartPose.offset(0.0F, 0.0F, 0.0F));
 
         //Parts are unused and not rendered but necessary to "add"" to avoid crash
         partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.offset(0.0F, 0.0F, 0.0F));
@@ -45,7 +45,7 @@ public class ModelWingedHussarBoots<T extends LivingEntity> extends HumanoidMode
         partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(40, 16).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, CubeDeformation.NONE), PartPose.offset(-5.0F, 2.0F, 0.0F));
         partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(40, 16).mirror().addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, CubeDeformation.NONE), PartPose.offset(5.0F, 2.0F, 0.0F));
 
-        return LayerDefinition.create(meshdefinition, 128, 128);
+        return LayerDefinition.create(meshdefinition, 16, 32);
     }
 
     @Override

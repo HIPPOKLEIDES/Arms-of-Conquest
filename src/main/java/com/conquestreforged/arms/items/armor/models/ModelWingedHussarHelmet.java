@@ -51,12 +51,12 @@ public class ModelWingedHussarHelmet<T extends LivingEntity> extends HumanoidMod
         CubeDeformation scale4 = new CubeDeformation(0.61F, 0.61F, 0.61F);
 
         //Helmet
-        PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 32).addBox(-4.0F, -8.5F, -4.0F, 8.0F, 8.0F, 8.0F, scale0), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition head1 = head.addOrReplaceChild("head1", CubeListBuilder.create().texOffs(0, 48).addBox(-3.5F, -9.65F, -3.5F, 7.0F, 7.0F, 7.0F, scale1), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition head2 = head1.addOrReplaceChild("head2", CubeListBuilder.create().texOffs(17, 112).addBox(-4.5F, -5.68F, -7.5F, 9.0F, 0.0F, 12.0F, scale0), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition head3 = head2.addOrReplaceChild("head3", CubeListBuilder.create().texOffs(32, 32).addBox(-4.0F, -8.5F, -4.0F, 8.0F, 8.0F, 8.0F, scale2), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition head4 = head3.addOrReplaceChild("head4", CubeListBuilder.create().texOffs(32, 48).addBox(-4.0F, -8.5F, -4.0F, 8.0F, 8.0F, 8.0F, scale3), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition head5 = head4.addOrReplaceChild("head5", CubeListBuilder.create().texOffs(4, 99).addBox(0.61F, -14.73F, -5.06F, 0.0F, 8.0F, 9.0F, scale4), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8F, -4.0F, 8.0F, 8.0F, 8.0F, scale0), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition head1 = head.addOrReplaceChild("head1", CubeListBuilder.create().texOffs(0, 16).addBox(-3.5F, -9.15F, -3.5F, 7.0F, 7.0F, 7.0F, scale1), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition head2 = head1.addOrReplaceChild("head2", CubeListBuilder.create().texOffs(17, 48).addBox(-4.5F, -5.18F, -7.5F, 9.0F, 0.0F, 12.0F, scale0), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition head3 = head2.addOrReplaceChild("head3", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, scale2), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition head4 = head3.addOrReplaceChild("head4", CubeListBuilder.create().texOffs(32, 16).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, scale3), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition head5 = head4.addOrReplaceChild("head5", CubeListBuilder.create().texOffs(4, 35).addBox(0.61F, -14.23F, -5.06F, 0.0F, 8.0F, 9.0F, scale4), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 
         //Parts are unused and not rendered but necessary to "add"" to avoid crash
@@ -67,7 +67,7 @@ public class ModelWingedHussarHelmet<T extends LivingEntity> extends HumanoidMod
         partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), PartPose.offset(-1.9F, 12.0F, 0.0F));
         partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 16).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), PartPose.offset(1.9F, 12.0F, 0.0F));
 
-        return LayerDefinition.create(meshdefinition, 128, 128);
+        return LayerDefinition.create(meshdefinition, 64, 64);
     }
 
 

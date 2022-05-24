@@ -59,12 +59,12 @@ public class ItemInit {
             ModelWingedHussarBoots.class, ModelWingedHussarBoots.LAYER_LOCATION,
             metalMaterials);
     public static final List<RegistryObject<Item>> WINGED_HUSSAR_CHEST = registerArmorModelMultiMaterials(
-            "winged_hussar_chest", genericCombatProps, "winged_hussar",
+            "winged_hussar_chestplate", genericCombatProps, "winged_hussar_chestplate",
             EquipmentSlot.CHEST,
             ModelWingedHussarChest.class, ModelWingedHussarChest.LAYER_LOCATION,
             metalMaterials);
     public static final List<RegistryObject<Item>> WINGED_HUSSAR_LEGS = registerArmorModelMultiMaterials(
-            "winged_hussar_legs", genericCombatProps, "winged_hussar_legs",
+            "winged_hussar_pants", genericCombatProps, "winged_hussar_pants",
             EquipmentSlot.LEGS,
             ModelWingedHussarLegs.class, ModelWingedHussarLegs.LAYER_LOCATION,
             metalMaterials);
@@ -160,19 +160,19 @@ public class ItemInit {
             switch (armorMaterial.getName()) {
                 case "iron":
                     armorsList.add(REGISTER.register(name, () ->
-                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorTexPath(texture, false))));
+                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorModelTexPath(texture, false))));
                     break;
                 case "bronze":
                     armorsList.add(REGISTER.register(name, () ->
-                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorTexPath(texture, false))));
+                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorModelTexPath(texture, false))));
                     break;
                 case "diamond":
                     armorsList.add(REGISTER.register("refined_" + name, () ->
-                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorTexPath(texture, false))));
+                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorModelTexPath(texture, false))));
                     break;
                 case "netherite":
                     armorsList.add(REGISTER.register("exquisite_" + name, () ->
-                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorTexPath(texture, false))));
+                            new ArmorModelItem(armorMaterial, slot, props, modelClass, layerLocation, constructArmorModelTexPath(texture, false))));
                     break;
             }
         });
@@ -229,6 +229,11 @@ public class ItemInit {
         } else {
             return path + textureName + "_layer_1.png";
         }
+    }
+
+    private static String constructArmorModelTexPath(String textureName, boolean isPants) {
+        String path = MOD_ID + ":" + "textures/models/armor/";
+        return path + textureName + ".png";
     }
 
 }

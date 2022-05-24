@@ -28,40 +28,6 @@ public class ModelWingedHussarLegs<T extends LivingEntity> extends HumanoidModel
         this.leftarm = root.getChild("left_arm");
         this.rightleg = root.getChild("right_leg");
         this.leftleg = root.getChild("left_leg");
-
-        /*super(0, 0, 128, 128);
-        texWidth = 128;
-        texHeight = 128;
-
-        Chestplate = new ModelPart(this);
-        Chestplate.setPos(0.0F, 24.0F, 0.0F);
-        Chestplate.texOffs(64, 64).addBox(-4.0F, -24.0F, -2.0F, 8.0F, 12.0F, 4.0F, 0.261F, false);
-
-        rightarm = new ModelPart(this);
-        rightarm.setPos(0.0F, 24.0F, 0.0F);
-        rightarm.texOffs(96, 64).addBox(-3.0F, -26.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.252F, false);
-
-        leftarm = new ModelPart(this);
-        leftarm.setPos(0.0F, 24.0F, 0.0F);
-        leftarm.texOffs(96, 80).addBox(-1.0F, -26.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.252F, false);
-
-        rightleg = new ModelPart(this);
-        rightleg.setPos(0.0F, 24.0F, 0.0F);
-        rightleg.texOffs(80, 80).addBox(-1.98F, -24.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.252F, false);
-
-        leftleg = new ModelPart(this);
-        leftleg.setPos(0.0F, 24.0F, 0.0F);
-        leftleg.texOffs(64, 80).addBox(-2.02F, -24.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.253F, false);
-
-        this.rightArm.addChild(rightarm);
-        this.leftArm.addChild(leftarm);
-        this.rightLeg.addChild(rightleg);
-        this.leftLeg.addChild(leftleg);
-
-        this.body.addChild(Chestplate);
-
-         */
-
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -73,19 +39,19 @@ public class ModelWingedHussarLegs<T extends LivingEntity> extends HumanoidModel
         CubeDeformation scale4 = new CubeDeformation(0.252F, 0.252F, 0.252F);
 
         //Chestplate
-        PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(64, 64).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, scale2), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, scale2), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-        PartDefinition rightArm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(96, 64).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale4), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition leftArm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(96, 80).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale4), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition rightArm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(32, 0).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale4), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition leftArm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 16).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale4), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-        PartDefinition rightLeg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(80, 80).addBox(-1.98F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale4), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition leftLeg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(64, 80).addBox(-2.02F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale3), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition rightLeg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(16, 16).addBox(-1.98F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale4), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition leftLeg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 16).addBox(-2.02F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, scale3), PartPose.offset(0.0F, 0.0F, 0.0F));
 
         //Parts are unused and not rendered but necessary to "add"" to avoid crash
         partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.offset(0.0F, 0.0F, 0.0F));
         partdefinition.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, CubeDeformation.NONE.extend(0.5F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-        return LayerDefinition.create(meshdefinition, 128, 128);
+        return LayerDefinition.create(meshdefinition, 48, 32);
     }
 
     @Override
