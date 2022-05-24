@@ -6,6 +6,7 @@ import com.conquestreforged.arms.util.ModItemProperties;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SwordItem;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -20,7 +21,14 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         simpleItem(ItemInit.CRUSADER_CHEST.get());
-        ItemInit.dataGenItemModels.forEach(registryItem -> simpleItem(registryItem.get()));
+        ItemInit.dataGenItemModels.forEach(registryItem -> {
+            Item item = registryItem.get();
+            if (item instanceof SwordItem) {
+                swordItem(item);
+            } else {
+                simpleItem(item);
+            }
+        });
         shieldItem(ItemInit.NORMAN_SHIELD.get());
     }
 
@@ -32,6 +40,15 @@ public class ModItemModelProvider extends ItemModelProvider {
                 .replace("exquisite_", "")
                 )
         );
+    }
+
+    private ItemModelBuilder swordItem(Item item) {
+        return withExistingParent(item.getRegistryName().getPath(), new ResourceLocation(ArmsOfConquest.MOD_ID + ":item/sword"))
+                .texture("layer0", new ResourceLocation(ArmsOfConquest.MOD_ID, "item/" + item.getRegistryName().getPath()
+                        .replace("refined_", "")
+                        .replace("exquisite_", "")
+                        )
+                );
     }
 
     private ItemModelBuilder shieldItem(Item item) {

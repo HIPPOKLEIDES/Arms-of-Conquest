@@ -34,10 +34,15 @@ public class ItemInit {
             .tab(CreativeModeTab.TAB_COMBAT)
             .stacksTo(1)
             .durability(100);
-    public static final List<ArmorMaterial> ironMaterials = new ArrayList<>(Arrays.asList(
+    public static final List<ArmorMaterial> metalMaterials = new ArrayList<>(Arrays.asList(
             net.minecraft.world.item.ArmorMaterials.IRON,
             net.minecraft.world.item.ArmorMaterials.DIAMOND,
             net.minecraft.world.item.ArmorMaterials.NETHERITE
+    ));
+    public static final List<Tier> metalTiers = new ArrayList<>(Arrays.asList(
+            Tiers.IRON,
+            Tiers.DIAMOND,
+            Tiers.NETHERITE
     ));
 
 
@@ -47,27 +52,27 @@ public class ItemInit {
             "centurion_helmet", genericCombatProps, "centurion_helmet",
             EquipmentSlot.HEAD,
             ModelFlatCrestHelmet.class, ModelFlatCrestHelmet.LAYER_LOCATION,
-            ironMaterials);
+            metalMaterials);
     public static final List<RegistryObject<Item>> WINGED_HUSSAR_BOOTS = registerArmorModelMultiMaterials(
             "winged_hussar_boots", genericCombatProps, "winged_hussar_boots",
             EquipmentSlot.FEET,
             ModelWingedHussarBoots.class, ModelWingedHussarBoots.LAYER_LOCATION,
-            ironMaterials);
+            metalMaterials);
     public static final List<RegistryObject<Item>> WINGED_HUSSAR_CHEST = registerArmorModelMultiMaterials(
             "winged_hussar_chest", genericCombatProps, "winged_hussar",
             EquipmentSlot.CHEST,
             ModelWingedHussarChest.class, ModelWingedHussarChest.LAYER_LOCATION,
-            ironMaterials);
+            metalMaterials);
     public static final List<RegistryObject<Item>> WINGED_HUSSAR_LEGS = registerArmorModelMultiMaterials(
             "winged_hussar_legs", genericCombatProps, "winged_hussar_legs",
             EquipmentSlot.LEGS,
             ModelWingedHussarLegs.class, ModelWingedHussarLegs.LAYER_LOCATION,
-            ironMaterials);
+            metalMaterials);
     public static final List<RegistryObject<Item>> WINGED_HUSSAR_HELMET = registerArmorModelMultiMaterials(
             "winged_hussar_helmet", genericCombatProps, "winged_hussar_helmet",
             EquipmentSlot.HEAD,
             ModelWingedHussarHelmet.class, ModelWingedHussarHelmet.LAYER_LOCATION,
-            ironMaterials);
+            metalMaterials);
 
     public static final RegistryObject<Item> SPEAR_IRON = REGISTER.register("spear_iron", () ->
             new ModSpear(genericCombatProps, EntityTypes.SPEAR_IRON, 7.0F));
@@ -78,12 +83,12 @@ public class ItemInit {
                     constructArmorTexPath("crusader", false)));
 
     public static final List<RegistryObject<Item>> KNIGHT_ARMORS = registerArmorSetMultiMaterials(
-            genericCombatProps, "knight", ironMaterials);
+            genericCombatProps, "knight", metalMaterials);
 
     public static final RegistryObject<Item> NORMAN_SHIELD = registerShield("norman_shield", genericCombatProps);
     public static final RegistryObject<Item> STEPPE_RECURVE_BOW = registerBow("steppe_recurve_bow", genericCombatProps);
     public static final RegistryObject<Item> LIGHT_CROSSBOW = registerCrossBow("light_crossbow", genericCombatProps);
-
+    public static final List<RegistryObject<Item>> BASTARD_SWORD = registerSwordssFullSet("bastard_sword", 3, -2.4F, genericCombatProps, metalTiers);
 
     //public static Item corinthian_helmet = new StraightCrestHelmet(ArmorMaterials.corinthian_helmet,EquipmentSlot.HEAD, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "corinthian_helmet"));
     //public static Item jaguar_helmet = new StraightCrestHelmet(ArmorMaterials.jaguar_helmet,EquipmentSlot.HEAD, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "jaguar_helmet"));
@@ -95,6 +100,23 @@ public class ItemInit {
     //public static Item winged_hussar_chest = new WingedHussarChest(ArmorMaterials.winged_hussar,EquipmentSlot.CHEST, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_chest"));
     //public static Item winged_hussar_pants = new WingedHussarPants(ArmorMaterials.winged_hussar,EquipmentSlot.LEGS, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_pants"));
     //public static Item winged_hussar_boots = new WingedHussarBoots(ArmorMaterials.winged_hussar,EquipmentSlot.FEET, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_boots"));
+
+    private static List<RegistryObject<Item>> registerSwordssFullSet(String name, int damage, float speed, Item.Properties props, List<Tier> tiers) {
+        List<RegistryObject<Item>> swordsList = new ArrayList<>();
+
+        tiers.forEach(tier -> {
+            if (Tiers.IRON.equals(tier)) {
+                swordsList.add(REGISTER.register(name, () -> new SwordItem(tier, damage, speed, props)));
+            } else if (Tiers.DIAMOND.equals(tier)) {
+                swordsList.add(REGISTER.register("refined_" + name, () -> new SwordItem(tier, damage, speed, props)));
+            } else if (Tiers.NETHERITE.equals(tier)) {
+                swordsList.add(REGISTER.register("exquisite_" + name, () -> new SwordItem(tier, damage, speed, props)));
+            }
+        });
+        dataGenItemModels.addAll(swordsList);
+        dataGenItemRecipes.addAll(swordsList);
+        return swordsList;
+    }
 
     private static RegistryObject<Item> registerCrossBow(String name, Item.Properties props) {
         RegistryObject<Item> item = REGISTER.register(name, () -> new ModCrossbow(props));

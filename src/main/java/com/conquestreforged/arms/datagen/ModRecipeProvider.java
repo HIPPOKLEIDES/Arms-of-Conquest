@@ -3,6 +3,7 @@ package com.conquestreforged.arms.datagen;
 import com.conquestreforged.arms.init.ItemInit;
 import com.conquestreforged.arms.items.ModShield;
 import com.conquestreforged.arms.recipe.ModRecipes;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -23,7 +24,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
-        armsStation(Ingredient.of(Items.IRON_CHESTPLATE), ItemInit.CRUSADER_CHEST.get()).save(recipeConsumer);
+        //armsStation(Ingredient.of(Items.IRON_CHESTPLATE), ItemInit.CRUSADER_CHEST.get()).save(recipeConsumer);
 
         ItemInit.dataGenItemRecipes.forEach(registryItem -> {
             Item item = registryItem.get();
@@ -31,7 +32,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 createArmorRecipe(recipeConsumer, (ArmorItem) registryItem.get());
             }
             if (item instanceof ModShield) {
-                armsStation(Ingredient.of(Items.SHIELD), item).save(recipeConsumer);
+                armsStation(Ingredient.of(Items.SHIELD), item)
+                        .unlockedBy("has_" + Items.SHIELD, inventoryTrigger(ItemPredicate.Builder.item().of(Items.SHIELD).build()))
+                        .save(recipeConsumer);
             }
         });
     }
@@ -94,7 +97,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 break;
         }
 
-        armsStation(Ingredient.of(ingredientItem), result).save(recipeConsumer);
+        armsStation(Ingredient.of(ingredientItem), result)
+                .unlockedBy("has_" + ingredientItem, inventoryTrigger(ItemPredicate.Builder.item().of(ingredientItem).build()))
+                .save(recipeConsumer);
     }
 
     public static SingleItemRecipeBuilder armsStation(Ingredient ingredient, ItemLike itemLike) {
