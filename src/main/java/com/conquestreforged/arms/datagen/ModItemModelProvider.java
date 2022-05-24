@@ -5,6 +5,7 @@ import com.conquestreforged.arms.init.ItemInit;
 import com.conquestreforged.arms.util.ModItemProperties;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SwordItem;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
@@ -25,6 +26,8 @@ public class ModItemModelProvider extends ItemModelProvider {
             Item item = registryItem.get();
             if (item instanceof SwordItem) {
                 swordItem(item);
+            } else if (item instanceof AxeItem) {
+                axeItem(item);
             } else {
                 simpleItem(item);
             }
@@ -40,6 +43,15 @@ public class ModItemModelProvider extends ItemModelProvider {
                 .replace("exquisite_", "")
                 )
         );
+    }
+
+    private ItemModelBuilder axeItem(Item item) {
+        return withExistingParent(item.getRegistryName().getPath(), new ResourceLocation(ArmsOfConquest.MOD_ID + ":item/axe"))
+                .texture("layer0", new ResourceLocation(ArmsOfConquest.MOD_ID, "item/" + item.getRegistryName().getPath()
+                                .replace("refined_", "")
+                                .replace("exquisite_", "")
+                        )
+                );
     }
 
     private ItemModelBuilder swordItem(Item item) {

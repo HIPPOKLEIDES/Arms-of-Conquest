@@ -8,9 +8,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SingleItemRecipeBuilder;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
@@ -28,15 +26,52 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         ItemInit.dataGenItemRecipes.forEach(registryItem -> {
             Item item = registryItem.get();
-            if (item instanceof ArmorItem) {
+            if (item instanceof SwordItem) {
+                createSwordRecipe(recipeConsumer, (SwordItem) registryItem.get());
+            } else if (item instanceof AxeItem) {
+                createAxeRecipe(recipeConsumer, (AxeItem) registryItem.get());
+            } else if (item instanceof ArmorItem) {
                 createArmorRecipe(recipeConsumer, (ArmorItem) registryItem.get());
-            }
-            if (item instanceof ModShield) {
+            } else if (item instanceof ModShield) {
                 armsStation(Ingredient.of(Items.SHIELD), item)
                         .unlockedBy("has_" + Items.SHIELD, inventoryTrigger(ItemPredicate.Builder.item().of(Items.SHIELD).build()))
                         .save(recipeConsumer);
             }
         });
+    }
+
+    private void createAxeRecipe(Consumer<FinishedRecipe> recipeConsumer, AxeItem result) {
+        Item ingredientItem = Items.WOODEN_AXE;
+        Tier tier = result.getTier();
+
+        if (Tiers.IRON.equals(tier)) {
+            ingredientItem = Items.IRON_AXE;
+        } else if (Tiers.DIAMOND.equals(tier)) {
+            ingredientItem = Items.DIAMOND_AXE;
+        } else if (Tiers.NETHERITE.equals(tier)) {
+            ingredientItem = Items.NETHERITE_AXE;
+        }
+
+        armsStation(Ingredient.of(ingredientItem), result)
+                .unlockedBy("has_" + ingredientItem, inventoryTrigger(ItemPredicate.Builder.item().of(ingredientItem).build()))
+                .save(recipeConsumer);
+    }
+
+    private void createSwordRecipe(Consumer<FinishedRecipe> recipeConsumer, SwordItem result) {
+        Item ingredientItem = Items.WOODEN_SWORD;
+        Tier tier = result.getTier();
+
+        if (Tiers.IRON.equals(tier)) {
+            ingredientItem = Items.IRON_SWORD;
+        } else if (Tiers.DIAMOND.equals(tier)) {
+            ingredientItem = Items.DIAMOND_SWORD;
+        } else if (Tiers.NETHERITE.equals(tier)) {
+            ingredientItem = Items.NETHERITE_SWORD;
+        }
+
+        armsStation(Ingredient.of(ingredientItem), result)
+                .unlockedBy("has_" + ingredientItem, inventoryTrigger(ItemPredicate.Builder.item().of(ingredientItem).build()))
+                .save(recipeConsumer);
     }
 
     private void createArmorRecipe(Consumer<FinishedRecipe> recipeConsumer, ArmorItem result) {

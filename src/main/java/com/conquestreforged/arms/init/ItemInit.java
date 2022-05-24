@@ -88,7 +88,8 @@ public class ItemInit {
     public static final RegistryObject<Item> NORMAN_SHIELD = registerShield("norman_shield", genericCombatProps);
     public static final RegistryObject<Item> STEPPE_RECURVE_BOW = registerBow("steppe_recurve_bow", genericCombatProps);
     public static final RegistryObject<Item> LIGHT_CROSSBOW = registerCrossBow("light_crossbow", genericCombatProps);
-    public static final List<RegistryObject<Item>> BASTARD_SWORD = registerSwordssFullSet("bastard_sword", 3, -2.4F, genericCombatProps, metalTiers);
+    public static final List<RegistryObject<Item>> BASTARD_SWORD = registerSwordsFullSet("bastard_sword", 3, -2.4F, genericCombatProps, metalTiers);
+    public static final List<RegistryObject<Item>> VIKING_AXE = registerAxeFullSet("viking_axe", 6, -3.1F, genericCombatProps, metalTiers);
 
     //public static Item corinthian_helmet = new StraightCrestHelmet(ArmorMaterials.corinthian_helmet,EquipmentSlot.HEAD, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "corinthian_helmet"));
     //public static Item jaguar_helmet = new StraightCrestHelmet(ArmorMaterials.jaguar_helmet,EquipmentSlot.HEAD, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "jaguar_helmet"));
@@ -101,7 +102,24 @@ public class ItemInit {
     //public static Item winged_hussar_pants = new WingedHussarPants(ArmorMaterials.winged_hussar,EquipmentSlot.LEGS, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_pants"));
     //public static Item winged_hussar_boots = new WingedHussarBoots(ArmorMaterials.winged_hussar,EquipmentSlot.FEET, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).durability(100)).setRegistryName(new ResourceLocation(MOD_ID, "winged_hussar_boots"));
 
-    private static List<RegistryObject<Item>> registerSwordssFullSet(String name, int damage, float speed, Item.Properties props, List<Tier> tiers) {
+    private static List<RegistryObject<Item>> registerAxeFullSet(String name, int damage, float speed, Item.Properties props, List<Tier> tiers) {
+        List<RegistryObject<Item>> axeList = new ArrayList<>();
+
+        tiers.forEach(tier -> {
+            if (Tiers.IRON.equals(tier)) {
+                axeList.add(REGISTER.register(name, () -> new AxeItem(tier, damage, speed, props)));
+            } else if (Tiers.DIAMOND.equals(tier)) {
+                axeList.add(REGISTER.register("refined_" + name, () -> new AxeItem(tier, damage - 1, speed + 0.1F, props)));
+            } else if (Tiers.NETHERITE.equals(tier)) {
+                axeList.add(REGISTER.register("exquisite_" + name, () -> new AxeItem(tier, damage - 1, speed + 0.1F, props)));
+            }
+        });
+        dataGenItemModels.addAll(axeList);
+        dataGenItemRecipes.addAll(axeList);
+        return axeList;
+    }
+
+    private static List<RegistryObject<Item>> registerSwordsFullSet(String name, int damage, float speed, Item.Properties props, List<Tier> tiers) {
         List<RegistryObject<Item>> swordsList = new ArrayList<>();
 
         tiers.forEach(tier -> {
