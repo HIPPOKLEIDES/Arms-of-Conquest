@@ -48,6 +48,16 @@ public class ItemInit {
 
     public static final DeferredRegister<Item> REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
+    public static final List<RegistryObject<Item>> TOURNEY_KNIGHT_HELMET = registerArmorModelMultiMaterials(
+            "tourney_knight_helmet", genericCombatProps, "tourney_knight_helmet",
+            EquipmentSlot.HEAD,
+            ModelGenericHelmet.class, EntityClientInit.TOURNEY_KNIGHT_HELM_LAYER_LOCATION,
+            metalMaterials);
+    public static final List<RegistryObject<Item>> CRUSADER_HELMET = registerArmorModelMultiMaterials(
+            "crusader_helmet", genericCombatProps, "crusader_helmet",
+            EquipmentSlot.HEAD,
+            ModelGenericHelmet.class, EntityClientInit.CRUSADER_HELM_LAYER_LOCATION,
+            metalMaterials);
     public static final List<RegistryObject<Item>> CENTURION_HELMET = registerArmorModelMultiMaterials(
             "centurion_helmet", genericCombatProps, "centurion_helmet",
             EquipmentSlot.HEAD,
